@@ -134,6 +134,11 @@ body {
     margin-left: 10%;
 }
 
+.password-bullets {
+    text-security: disc;
+    -webkit-text-security: disc;
+  }
+
 .subcard-wrapper-custom {
     border-radius: 0 !important;
     border: none !important;
@@ -147,4 +152,12 @@ body {
     box-shadow: -2px -2px 4px rgba(255,255,255,0.5),
                 2px 2px 4px rgba(70,70,70,0.12);
     margin: 1rem;
+}
+
+.table-cell-center {
+    vertical-align: middle !important;
+}
+
+.table-cell-center-horizontal {
+    text-align: center;
 }
