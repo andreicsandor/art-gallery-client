@@ -6,9 +6,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { 
   Login, 
   Logout, 
-} from './pages/Account';
-import Home from './pages/Home';
-import Header from './pages/Header';
+} from './pages/Authentication';
+import { 
+  ExhibitsEmployee, 
+  ExhibitsVisitor 
+} from './pages/Exhibits';
 
   
 function App() {
@@ -17,8 +19,8 @@ function App() {
     <div className="container-custom">
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/inventory" element={<ExhibitsEmployee />} />
+        <Route path="/gallery" element={<ExhibitsVisitor />} />
       </Routes>
     </div>
     </>
