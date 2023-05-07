@@ -15,10 +15,7 @@ import {
     Input,
     Row 
   } from 'reactstrap';
-  import { 
-    checkAuthenticated 
-  } from "../Authentication";
-  import api from '../privateApi';
+  import api from '../Api';
   
   
   const Login = () => {
@@ -26,56 +23,52 @@ import {
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-    /*
-    // Check user authentication status when the component mounts
-    useEffect(() => {
-      const checkAuth = async () => {
-        const isAuthenticated = await checkAuthenticated();
-        if (isAuthenticated) {
-          navigate('/');
-        }
-      };
-    
-      checkAuth();
-    }, [navigate]);
-  
+        
     const handleSubmit = async (event) => {
       event.preventDefault();
       try {
-        const response = await api.post('/api/token/', {
+        const response = await api.post('/login', {
           username: username,
           password: password,
         });
-        if (response.data.access) {
-          localStorage.setItem('access_token', response.data.access);
-          localStorage.setItem('refresh_token', response.data.refresh);
-          navigate('/');
+        if (response.status === 200) {
+          const role = response.data.role;
+          if (role === 'Administrator') {
+            navigate('/admin');
+          } else if (role === 'Employee') {
+            navigate('/employee');
+          } else {
+            setErrorMessage('Invalid role.');
+          }
         } else {
-          console.error('Log in failed.');
+          setErrorMessage('Log in failed.');
         }
       } catch (error) {
-        if (error.response && error.response.status === 400 || error.response.status === 401) {
-          setErrorMessage("Invalid username or password.");
+        if (error.response && (error.response.status === 400 || error.response.status === 401)) {
+          setErrorMessage('Invalid username or password.');
         } else {
           console.error('An unknown error occurred:', error);
-          navigate("/login");
+          navigate('/login');
         }
       }
-  
     };
-    */
+
+    const handleVisitGallery = () => {
+      navigate('/gallery');
+    };
+
     return (
       <>
       <div style={{margin: '100px'}}></div>
       <Container className="my-5">
         <Row>
           <Col>
-            <h1 className="display-5 text-center mb-5">Login</h1>
+            <h1 className="display-5 text-center mb-5">Welcome to Art Gallery</h1>
           </Col>
         </Row>
         <Row className="justify-content-center">
           <Col md={4}>
-            <Form /* onSubmit={handleSubmit} */>
+            <Form onSubmit={handleSubmit} >
               <FormGroup>
                 <Input
                   type="text"
@@ -101,8 +94,15 @@ import {
                 />
               </FormGroup>
   
-              <Button color="dark" block>Login</Button>
-  
+              <Row>
+                <Col>
+                  <Button color="dark" block>Login</Button>
+                </Col>
+                <Col>
+                  <Button color="dark" block onClick={handleVisitGallery}>Visit Gallery</Button>
+                </Col>
+              </Row>
+            
               {errorMessage && <div className="mt-5 mb-5 fw-bold error-message">{errorMessage}</div>}
   
             </Form>
@@ -118,11 +118,6 @@ import {
   
     useEffect(() => {
       const checkAuth = async () => {
-        const isAuthenticated = await checkAuthenticated();
-        if (isAuthenticated) {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-        }
         navigate('/');
       };
   
