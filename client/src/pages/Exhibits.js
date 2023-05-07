@@ -53,7 +53,7 @@ import {
       <div className='m-5'>  
         <Row sm={12}>
           {exhibits.map(exhibit => (
-            <Col sm={3} key={exhibit.id}>
+            <Col sm={3} key={exhibit.item.id}>
               <Card className='card-shadow-custom mb-3'>
                 <CardBody>
                   <CardTitle tag='h5' className='mb-2'>{exhibit.item.name}</CardTitle>
@@ -62,7 +62,7 @@ import {
                     <li>{exhibit.item.type}, {exhibit.item.year}</li>
                     <li>{exhibit.gallery}</li>
                   </ul>
-                  <Button color='light' block onClick={() => handleClick(exhibit.id)}>Edit</Button>
+                  <Button color='light' block onClick={() => handleClick(exhibit.item.id)}>Edit</Button>
                 </CardBody>
               </Card>
             </Col>
