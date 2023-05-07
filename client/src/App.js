@@ -7,6 +7,7 @@ import {
   Login, 
   Logout, 
 } from './pages/Authentication';
+import AccountsAdmin from './pages/Accounts'
 import { 
   ExhibitsEmployee, 
   ExhibitsVisitor 
@@ -19,6 +20,7 @@ function App() {
     <div className="container-custom">
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<AccountsAdmin />} />
         <Route path="/inventory" element={<ExhibitsEmployee />} />
         <Route path="/gallery" element={<ExhibitsVisitor />} />
       </Routes>
