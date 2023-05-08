@@ -80,6 +80,7 @@ function EmployeeView() {
 const VisitorHeader = ({ filterExhibits, clearFilter }) => {
   const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
   const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState('');
 
   const [filterType, setFilterType] = useState('Type');
   const [filterKeyword, setFilterKeyword] = useState('Painting');
@@ -89,6 +90,13 @@ const VisitorHeader = ({ filterExhibits, clearFilter }) => {
 
   const toggleDropdownType = () => setDropdownTypeOpen((prevState) => !prevState);
   const toggleDropdownKeyword = () => setDropdownKeywordOpen((prevState) => !prevState);
+
+  const handleSearchInput = (e) => {
+    setSearchInput(e.target.value);
+  };
+  const handleSearch = () => {
+    filterExhibits('Name', searchInput);
+  };
 
   useEffect(() => {
     const fetchArtists = async () => {
@@ -166,6 +174,19 @@ const VisitorHeader = ({ filterExhibits, clearFilter }) => {
                 )}
               </DropdownMenu>
             </Dropdown>
+            </div>
+            <div className="d-flex align-items-center">       
+              <Input
+                className="mx-2"
+                type="text"
+                placeholder="Search Name"
+                value={searchInput}
+                onChange={handleSearchInput}
+                style={{ width: '250px' }}
+              />
+              <Button color="dark" onClick={handleSearch} className="mx-1">
+                Search
+              </Button>         
           </div>
         </div>
       </div>
@@ -196,8 +217,6 @@ function VisitorView() {
         filterKeyword,
       );
 
-      console.log(exhibitFilterDTO);
-
       const response = await api.post("/api/filter-exhibits", exhibitFilterDTO);
       setExhibits(response.data);
     } catch (error) {
@@ -215,7 +234,7 @@ function VisitorView() {
         filterExhibits={filterExhibits}
         clearFilter={clearFilter}
     />
-    <div style={{margin: '100px'}}></div>
+    <div style={{margin: '150px'}}></div>
     <Row>
       <Col>
         <h1 className='display-5 text-center'>Exhibits</h1>
