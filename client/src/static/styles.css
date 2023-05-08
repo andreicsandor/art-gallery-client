@@ -134,10 +134,6 @@ body {
     margin-left: 10%;
 }
 
-.password-bullets {
-    text-security: disc;
-    -webkit-text-security: disc;
-  }
 
 .subcard-wrapper-custom {
     border-radius: 0 !important;
