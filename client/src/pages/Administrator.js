@@ -21,7 +21,7 @@ import AccountDTO from '../dto/AccountDTO';
 import api from '../Api';
 
 
-const AdminHeader = () => {
+const AdminHeader = ({ toggleCreateModal }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('Administrator');
   const navbar = document.querySelector('.nav');
@@ -62,7 +62,7 @@ const AdminHeader = () => {
             </Dropdown>
           </div>
           <div>
-            <Button className="mx-2" color="dark">Create Account</Button>
+            <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Account</Button>
           </div>
         </div>
       </div>
@@ -72,12 +72,35 @@ const AdminHeader = () => {
 
 function AdminView() {
   const [accounts, setAccounts] = useState([]);
-  const [selectedAccount, setSelectedAccount] = useState([]);
   const [galleries, setGalleries] = useState([]);
-  const [formData, setFormData] = useState([]);
-  const [modal, setModal] = useState(false);
+  const [selectedAccount, setSelectedAccount] = useState([]);
+  
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    role: 'Employee',
+    username: '',
+    password: '',
+    gallery: 'The Museum of Modern Art',
+  });
 
-  const toggle = () => setModal(!modal);
+  const [createModal, setCreateModal] = useState(false);
+  const [updateModal, setUpdateModal] = useState(false);
+
+  const toggleUpdateModal = () => setUpdateModal(!updateModal);
+  const toggleCreateModal = () => {
+    setFormData({
+      firstName: '',
+      lastName: '',
+      role: 'Employee',
+      username: '',
+      password: '',
+      gallery: 'The Museum of Modern Art',
+    });
+  
+    setCreateModal(!createModal);
+  };
+
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -108,7 +131,7 @@ function AdminView() {
   const handleClick = (account) => {
     setSelectedAccount(account);
     updateFormData(account);
-    toggle();
+    toggleUpdateModal();
   };
 
   const updateFormData = (account) => {
@@ -125,14 +148,38 @@ function AdminView() {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
   
-    if (name === "role" && value === "Employee" && galleries.length > 0) {
-      setFormData((prevState) => ({ ...prevState, [name]: value, gallery: galleries[0] }));
-    } else if (name === "role" && value === "Administrator") {
-      setFormData((prevState) => ({ ...prevState, [name]: value, gallery: null }));
+    if (name === "role") {
+      if (value === "Employee") {
+        setFormData((prevState) => ({ ...prevState, [name]: value, gallery: galleries[0] }));
+      } else {
+        setFormData((prevState) => ({ ...prevState, [name]: value, gallery: null }));
+      }
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
-  }; 
+  };
+
+  const handleCreate = async () => {
+    try {
+      const accountDTO = new AccountDTO(
+        formData.firstName,
+        formData.lastName,
+        formData.role,
+        formData.username,
+        formData.password,
+        formData.gallery
+      );
+  
+      const response = await api.post('/api/create-account', accountDTO);
+      if (response.status === 201) {
+        window.location.reload();
+      } else {
+        console.error("Failed to create account.");
+      }
+    } catch (error) {
+      console.error("An error occurred while creating the account:", error);
+    }
+  };
 
   const handleUpdate = async () => {  
     try {
@@ -176,7 +223,7 @@ function AdminView() {
 
   return (
     <>
-      <AdminHeader />
+     <AdminHeader toggleCreateModal={toggleCreateModal} />
       <div style={{ margin: '150px' }}></div>
       <Row>
         <Col>
@@ -224,10 +271,10 @@ function AdminView() {
           </div>
       </Row>
 
-      <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader toggle={toggle}>Edit Account</ModalHeader>
+      <Modal isOpen={createModal} toggle={toggleCreateModal}>
+        <ModalHeader toggle={toggleCreateModal}>Create Account</ModalHeader>
           <div>
-          {selectedAccount && formData && (
+          {formData && (
           <div className='mx-5 my-4'>
              <FormGroup floating>
                <Input
@@ -307,6 +354,100 @@ function AdminView() {
                </Input>
              </FormGroup>
              <Row>
+               <Col sm={12}>
+                 <Button color='dark' className='mt-4 mb-3 w-100' onClick={handleCreate}>
+                    Create
+                  </Button>
+               </Col>
+             </Row>
+          </div>
+          )}
+          </div>
+      </Modal>
+
+      <Modal isOpen={updateModal} toggle={toggleUpdateModal}>
+        <ModalHeader toggle={toggleUpdateModal}>Edit Account</ModalHeader>
+          <div>
+          {selectedAccount && formData && (
+          <div className='mx-5 my-4'>
+             <FormGroup floating>
+               <Input
+                 type="text"
+                 name="firstName"
+                 id="firstName"
+                 bsSize="default"
+                 value={formData.firstName}
+                 onChange={handleInputChange}
+               />
+               <Label for='firstName'>First Name</Label>
+             </FormGroup>
+             <FormGroup floating>
+               <Input
+                 type="text"
+                 name="lastName"
+                 id="lastName"
+                 bsSize="default"
+                 value={formData.lastName}
+                 onChange={handleInputChange}
+               />
+               <Label for='lastName'>Last Name</Label>
+             </FormGroup>
+             <FormGroup floating>
+               <Input
+                 type="text"
+                 name="username"
+                 id="username"
+                 bsSize="default"
+                 value={formData.username}
+                 onChange={handleInputChange}
+               />
+               <Label for='username'>Username</Label>
+             </FormGroup>
+             <FormGroup floating>
+               <Input
+                 type="password"
+                 name="password"
+                 id="password"
+                 bsSize="default"
+                 value={formData.password}
+                 onChange={handleInputChange}
+               />
+               <Label for='password'>Password</Label>
+             </FormGroup>
+             <FormGroup>
+              <Input
+                type='select'
+                name='role'
+                id='role'
+                bsSize='default'
+                value={formData.role || 'Employee'}
+                onChange={(e) => {
+                  handleInputChange(e);
+                }}
+              >
+                <option>Administrator</option>
+                <option selected>Employee</option>
+              </Input>
+            </FormGroup>
+             <FormGroup>
+               <Input
+                 type='select'
+                 name='gallery'
+                 id='gallery'
+                 bsSize='default'
+                 value={formData.role === 'Administrator' ? '' : formData.gallery} 
+                 disabled={formData.role === 'Administrator'}
+                 onChange={handleInputChange}
+               >
+                {formData.role === 'Employee' && galleries.map((galleryName) => (
+                  <option key={galleryName}>{galleryName}</option>
+                ))}
+                {formData.role === 'Administrator' && (
+                  <option>—</option>
+                )}
+               </Input>
+             </FormGroup>
+             <Row>
                <Col sm={6}>
                  <Button color='dark' className='mt-4 mb-3 w-100' onClick={handleUpdate}>
                    Update
@@ -319,9 +460,10 @@ function AdminView() {
                </Col>
              </Row>
           </div>
-        )}
+          )}
           </div>
       </Modal>
+
     </>
   );
 }
