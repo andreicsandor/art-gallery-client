@@ -192,6 +192,28 @@ function AccountsAdmin() {
                />
                <Label for='lastName'>Last Name</Label>
              </FormGroup>
+             <FormGroup floating>
+               <Input
+                 type="text"
+                 name="username"
+                 id="username"
+                 bsSize="default"
+                 value={formData.username}
+                 onChange={handleInputChange}
+               />
+               <Label for='username'>Username</Label>
+             </FormGroup>
+             <FormGroup floating>
+               <Input
+                 type="password"
+                 name="password"
+                 id="password"
+                 bsSize="default"
+                 value={formData.password}
+                 onChange={handleInputChange}
+               />
+               <Label for='password'>Password</Label>
+             </FormGroup>
              <FormGroup>
                <Input
                  type='select'
@@ -220,38 +242,19 @@ function AccountsAdmin() {
                 {formData.role === 'Employee' && galleries.map((galleryName) => (
                   <option key={galleryName}>{galleryName}</option>
                 ))}
+                {formData.role === 'Administrator' && (
+                  <option>—</option>
+                )}
                </Input>
-             </FormGroup>
-             <FormGroup floating>
-               <Input
-                 type="text"
-                 name="username"
-                 id="username"
-                 bsSize="default"
-                 value={formData.username}
-                 onChange={handleInputChange}
-               />
-               <Label for='username'>Username</Label>
-             </FormGroup>
-             <FormGroup floating>
-               <Input
-                 type="password"
-                 name="password"
-                 id="password"
-                 bsSize="default"
-                 value={formData.password}
-                 onChange={handleInputChange}
-               />
-               <Label for='password'>Password</Label>
              </FormGroup>
              <Row>
                <Col sm={6}>
-                 <Button color='dark' className='mt-3 w-100' onClick={handleUpdate}>
+                 <Button color='dark' className='mt-4 w-100' onClick={handleUpdate}>
                    Update
                  </Button>
                </Col>
                <Col sm={6}>
-                 <Button color='danger' className='mt-3 w-100' onClick={handleDelete}>
+                 <Button color='danger' className='mt-4 w-100' onClick={handleDelete}>
                    Delete
                  </Button>
                </Col>
