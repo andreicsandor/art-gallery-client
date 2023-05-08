@@ -23,26 +23,12 @@ import api from '../Api';
 
 
 const AdminHeader = () => {
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
-
-  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
-
-  const handleFilterChange = (filterType) => {
-    console.log('Selected filter type:', filterType);
-    // Update the filter type in your component or application state
-  };
-
+  
   return (
     <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
       <div className="d-flex justify-content-center w-100">
         <ul>
-          <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
-            <DropdownToggle caret>Select Filter Type</DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => handleFilterChange('Artist')}>Artist</DropdownItem>
-              <DropdownItem onClick={() => handleFilterChange('Type')}>Type</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+         
         </ul>
       </div>
     </Navbar>
