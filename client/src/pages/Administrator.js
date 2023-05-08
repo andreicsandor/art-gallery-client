@@ -1,14 +1,9 @@
-import { 
-  useEffect,
-  React, 
-  useState 
-} from 'react';
-import { 
-  Link 
-} from "react-router-dom"
+import React, { useEffect, useState } from 'react';
+import { Link } from "react-router-dom"
 import {
   Button,
   Col,
+  Dropdown,
   DropdownItem,
   DropdownMenu,
   DropdownToggle,
@@ -22,30 +17,33 @@ import {
   Table,
   UncontrolledDropdown,
 } from 'reactstrap';
-import { 
-  ReactComponent as UserIcon 
-} from '../assets/images/image-alt.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../dto/AccountDTO';
 import api from '../Api';
 
-const Header = () => {
+
+const AdminHeader = () => {
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
+
+  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+
+  const handleFilterChange = (filterType) => {
+    console.log('Selected filter type:', filterType);
+    // Update the filter type in your component or application state
+  };
 
   return (
-    <Navbar className="nav py-3 mb-3" style={{position: 'fixed', width: '100%', zIndex: 3}}>
+    <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
       <div className="d-flex justify-content-center w-100">
         <ul>
-          <Link to="/" className="link-item">Art Gallery</Link>
-          <UncontrolledDropdown>
-            <DropdownToggle nav className="link-item">
-              <UserIcon style={{ width: '20px', height: '20px' }} />
-            </DropdownToggle>
-            <DropdownMenu right>
-              <DropdownItem><Link to="/login">Login</Link></DropdownItem>
-              <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+          <Dropdown isOpen={dropdownOpen} toggle={toggleDropdown}>
+            <DropdownToggle caret>Select Filter Type</DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={() => handleFilterChange('Artist')}>Artist</DropdownItem>
+              <DropdownItem onClick={() => handleFilterChange('Type')}>Type</DropdownItem>
             </DropdownMenu>
-          </UncontrolledDropdown>
-        </ul> 
+          </Dropdown>
+        </ul>
       </div>
     </Navbar>
   );
@@ -157,7 +155,7 @@ function AdminView() {
 
   return (
     <>
-      <Header />
+      <AdminHeader />
       <div style={{ margin: '100px' }}></div>
       <Row>
         <Col>
