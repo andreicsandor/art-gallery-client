@@ -18,7 +18,7 @@ import {
   import api from '../Api';
   
   
-  const Login = () => {
+  const LoginView = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
@@ -113,7 +113,7 @@ import {
     );
   };
   
-  const Logout = () => {
+  const LogoutView = () => {
     const navigate = useNavigate();
   
     useEffect(() => {
@@ -129,5 +129,5 @@ import {
     );
   };
     
-  export { Login, Logout };
+  export { LoginView, LogoutView };
   

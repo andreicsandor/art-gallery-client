@@ -4,14 +4,14 @@ import {
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { 
-  Login, 
-  Logout, 
+  LoginView, 
+  LogoutView, 
 } from './pages/Authentication';
-import AccountsAdmin from './pages/Accounts'
+import AdminView from './pages/Administrator'
 import { 
-  ExhibitsEmployee, 
-  ExhibitsVisitor 
-} from './pages/Exhibits';
+  EmployeeView, 
+  VisitorView 
+} from './pages/Gallery';
 
   
 function App() {
@@ -19,10 +19,10 @@ function App() {
     <>
     <div className="container-custom">
       <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/admin" element={<AccountsAdmin />} />
-        <Route path="/inventory" element={<ExhibitsEmployee />} />
-        <Route path="/gallery" element={<ExhibitsVisitor />} />
+        <Route path="/login" element={<LoginView />} />
+        <Route path="/admin" element={<AdminView />} />
+        <Route path="/inventory" element={<EmployeeView />} />
+        <Route path="/gallery" element={<VisitorView />} />
       </Routes>
     </div>
     </>

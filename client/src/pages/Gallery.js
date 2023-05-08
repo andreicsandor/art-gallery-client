@@ -20,7 +20,7 @@ import {
   import api from '../Api';
   
   
-  function ExhibitsEmployee() {
+  function EmployeeView() {
     const navigate = useNavigate();  
     const [exhibits, setExhibits] = useState([]);
 
@@ -73,7 +73,7 @@ import {
     );
   }
   
-  function ExhibitsVisitor() {
+  function VisitorView() {
     const navigate = useNavigate();  
     const [exhibits, setExhibits] = useState([]);
 
@@ -121,5 +121,5 @@ import {
     );
   }
   
-  export { ExhibitsEmployee, ExhibitsVisitor };
+  export { EmployeeView, VisitorView };
   

@@ -11,10 +11,11 @@ import {
   Modal,
   ModalHeader,
 } from 'reactstrap';
+import Header from './Header'
 import api from '../Api';
 import AccountDTO from '../dto/AccountDTO';
 
-function AccountsAdmin() {
+function AdminView() {
   const [accounts, setAccounts] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState([]);
   const [galleries, setGalleries] = useState([]);
@@ -120,6 +121,7 @@ function AccountsAdmin() {
 
   return (
     <>
+      <Header />
       <div style={{ margin: '100px' }}></div>
       <Row>
         <Col>
@@ -269,5 +271,4 @@ function AccountsAdmin() {
   );
 }
 
-export default AccountsAdmin;
-                  
+export default AdminView;
