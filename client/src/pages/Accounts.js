@@ -103,6 +103,21 @@ function AccountsAdmin() {
     }
   }; 
 
+  const handleDelete = async () => {  
+    try {
+      const response = await api.delete(
+        `/api/delete-account/${selectedAccount.profile.id}`
+      );
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        console.error("Failed to delete account.");
+      }
+    } catch (error) {
+      console.error("An error occurred while deleting the account:", error);
+    }
+  }; 
+
   return (
     <>
       <div style={{ margin: '100px' }}></div>
@@ -236,7 +251,7 @@ function AccountsAdmin() {
                  </Button>
                </Col>
                <Col sm={6}>
-                 <Button color='danger' className='mt-3 w-100'>
+                 <Button color='danger' className='mt-3 w-100' onClick={handleDelete}>
                    Delete
                  </Button>
                </Col>
