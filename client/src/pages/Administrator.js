@@ -18,13 +18,14 @@ import {
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../DTOs/AccountDTO';
-import AccountFilterDTO from '../DTOs/AccountFilterDTO';
+import FilterDTO from '../DTOs/FilterDTO';
 import api from '../Api';
 
 
 const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState('Administrator');
+  
   const navbar = document.querySelector('.nav');
 
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
@@ -53,7 +54,7 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
               <Button color="dark" onClick={clearFilter}>Clear</Button>
             </ButtonGroup>
             <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
-              <DropdownToggle caret color="secondary">
+              <DropdownToggle caret color="dark">
                 {filterKeyword}
               </DropdownToggle>
               <DropdownMenu>
@@ -161,7 +162,7 @@ function AdminView() {
 
   const filterAccounts = async (filterKeyword) => {
     try {
-      const accountFilterDTO = new AccountFilterDTO(
+      const accountFilterDTO = new FilterDTO(
         "Role",
         filterKeyword,
       );
@@ -484,7 +485,7 @@ function AdminView() {
                  </Button>
                </Col>
                <Col sm={6}>
-                 <Button color='secondary' className='mt-4 mb-3 w-100' onClick={handleDelete}>
+                 <Button color='dark' className='mt-4 mb-3 w-100' onClick={handleDelete}>
                    Delete
                  </Button>
                </Col>
