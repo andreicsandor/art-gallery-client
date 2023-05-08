@@ -6,7 +6,6 @@ import {
   import { 
     useNavigate, 
   } from 'react-router-dom';
-  import 'bootstrap/dist/css/bootstrap.min.css';
   import { 
     Row, 
     Col, 
@@ -17,6 +16,7 @@ import {
     CardSubtitle, 
     Button, 
   } from 'reactstrap';
+  import 'bootstrap/dist/css/bootstrap.min.css';
   import api from '../Api';
   
   

@@ -1,19 +1,55 @@
-import React, { useEffect, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { 
+  useEffect,
+  React, 
+  useState 
+} from 'react';
+import { 
+  Link 
+} from "react-router-dom"
 import {
-  Row,
-  Col,
   Button,
+  Col,
+  DropdownItem,
+  DropdownMenu,
+  DropdownToggle,
   FormGroup,
   Input,
   Label,
-  Table,
   Modal,
   ModalHeader,
+  Navbar,
+  Row,
+  Table,
+  UncontrolledDropdown,
 } from 'reactstrap';
-import Header from './Header'
-import api from '../Api';
+import { 
+  ReactComponent as UserIcon 
+} from '../assets/images/image-alt.svg';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../dto/AccountDTO';
+import api from '../Api';
+
+const Header = () => {
+
+  return (
+    <Navbar className="nav py-3 mb-3" style={{position: 'fixed', width: '100%', zIndex: 3}}>
+      <div className="d-flex justify-content-center w-100">
+        <ul>
+          <Link to="/" className="link-item">Art Gallery</Link>
+          <UncontrolledDropdown>
+            <DropdownToggle nav className="link-item">
+              <UserIcon style={{ width: '20px', height: '20px' }} />
+            </DropdownToggle>
+            <DropdownMenu right>
+              <DropdownItem><Link to="/login">Login</Link></DropdownItem>
+              <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        </ul> 
+      </div>
+    </Navbar>
+  );
+};
 
 function AdminView() {
   const [accounts, setAccounts] = useState([]);
