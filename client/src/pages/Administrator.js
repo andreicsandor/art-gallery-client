@@ -18,7 +18,7 @@ import {
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../dto/AccountDTO';
-import FilterDTO from '../dto/FilterDTO';
+import AccountFilterDTO from '../dto/AccountFilterDTO';
 import api from '../Api';
 
 
@@ -161,12 +161,12 @@ function AdminView() {
 
   const filterAccounts = async (filterKeyword) => {
     try {
-      const filterDTO = new FilterDTO(
+      const accountFilterDTO = new AccountFilterDTO(
         "Role",
         filterKeyword,
       );
 
-      const response = await api.post("/api/filter-accounts", filterDTO);
+      const response = await api.post("/api/filter-accounts", accountFilterDTO);
       setAccounts(response.data);
     } catch (error) {
       console.error("An error occurred while fetching filtered accounts:", error);
