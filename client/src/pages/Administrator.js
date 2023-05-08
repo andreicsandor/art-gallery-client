@@ -18,12 +18,13 @@ import {
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../dto/AccountDTO';
+import FilterDTO from '../dto/FilterDTO';
 import api from '../Api';
 
 
-const AdminHeader = ({ toggleCreateModal }) => {
+const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilters }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState('Administrator');
+  const [filterKeyword, setFilterKeyword] = useState('Administrator');
   const navbar = document.querySelector('.nav');
 
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
@@ -36,8 +37,8 @@ const AdminHeader = ({ toggleCreateModal }) => {
     }
   };
 
-  const handleRoleSelection = (role) => {
-    setSelectedRole(role);
+  const handleFilterKeyword = (filterKeyword) => {
+    setFilterKeyword(filterKeyword);
   };
 
   window.addEventListener('scroll', handleScroll);
@@ -48,16 +49,16 @@ const AdminHeader = ({ toggleCreateModal }) => {
         <div className="d-flex w-75 justify-content-between">
           <div className="d-flex align-items-center">
             <ButtonGroup className='mx-2'>
-              <Button color="dark">Filter</Button>
-              <Button color="dark">Clear</Button>
+              <Button color="dark" onClick={() => filterAccounts(filterKeyword)}>Filter</Button>
+              <Button color="dark" onClick={clearFilters}>Clear</Button>
             </ButtonGroup>
             <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
               <DropdownToggle caret color="dark">
-                {selectedRole}
+                {filterKeyword}
               </DropdownToggle>
               <DropdownMenu>
-                <DropdownItem onClick={() => handleRoleSelection('Administrator')}>Administrator</DropdownItem>
-                <DropdownItem onClick={() => handleRoleSelection('Employee')}>Employee</DropdownItem>
+                <DropdownItem onClick={() => handleFilterKeyword('Administrator')}>Administrator</DropdownItem>
+                <DropdownItem onClick={() => handleFilterKeyword('Employee')}>Employee</DropdownItem>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -100,7 +101,6 @@ function AdminView() {
   
     setCreateModal(!createModal);
   };
-
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -157,6 +157,24 @@ function AdminView() {
     } else {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
+  };
+
+  const filterAccounts = async (filterKeyword) => {
+    try {
+      const filterDTO = new FilterDTO(
+        "Role",
+        filterKeyword,
+      );
+
+      const response = await api.post("/api/filter-accounts", filterDTO);
+      setAccounts(response.data);
+    } catch (error) {
+      console.error("An error occurred while fetching filtered accounts:", error);
+    }
+  };
+
+  const clearFilters = async () => {
+    window.location.reload();
   };
 
   const handleCreate = async () => {
@@ -223,7 +241,11 @@ function AdminView() {
 
   return (
     <>
-     <AdminHeader toggleCreateModal={toggleCreateModal} />
+     <AdminHeader
+        toggleCreateModal={toggleCreateModal}
+        filterAccounts={filterAccounts}
+        clearFilters={clearFilters}
+      />
       <div style={{ margin: '150px' }}></div>
       <Row>
         <Col>
