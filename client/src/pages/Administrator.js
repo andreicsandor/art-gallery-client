@@ -17,8 +17,8 @@ import {
   Table,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AccountDTO from '../dto/AccountDTO';
-import AccountFilterDTO from '../dto/AccountFilterDTO';
+import AccountDTO from '../DTOs/AccountDTO';
+import AccountFilterDTO from '../DTOs/AccountFilterDTO';
 import api from '../Api';
 
 
