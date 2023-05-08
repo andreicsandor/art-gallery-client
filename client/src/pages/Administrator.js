@@ -22,7 +22,7 @@ import AccountFilterDTO from '../DTOs/AccountFilterDTO';
 import api from '../Api';
 
 
-const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilters }) => {
+const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [filterKeyword, setFilterKeyword] = useState('Administrator');
   const navbar = document.querySelector('.nav');
@@ -50,7 +50,7 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilters }) => {
           <div className="d-flex align-items-center">
             <ButtonGroup className='mx-2'>
               <Button color="dark" onClick={() => filterAccounts(filterKeyword)}>Filter</Button>
-              <Button color="dark" onClick={clearFilters}>Clear</Button>
+              <Button color="dark" onClick={clearFilter}>Clear</Button>
             </ButtonGroup>
             <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
               <DropdownToggle caret color="dark">
@@ -173,7 +173,7 @@ function AdminView() {
     }
   };
 
-  const clearFilters = async () => {
+  const clearFilter = async () => {
     window.location.reload();
   };
 
@@ -244,12 +244,12 @@ function AdminView() {
      <AdminHeader
         toggleCreateModal={toggleCreateModal}
         filterAccounts={filterAccounts}
-        clearFilters={clearFilters}
+        clearFilter={clearFilter}
       />
       <div style={{ margin: '150px' }}></div>
       <Row>
         <Col>
-          <h5 className='display-6 text-center'>Manage Accounts</h5>
+          <h1 className='display-5 text-center'>Manage Accounts</h1>
         </Col>
       </Row>
       <Row>
