@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom"
 import {
   Button,
+  ButtonGroup,
   Col,
   Dropdown,
   DropdownItem,
@@ -15,7 +15,6 @@ import {
   Navbar,
   Row,
   Table,
-  UncontrolledDropdown,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../dto/AccountDTO';
@@ -23,13 +22,49 @@ import api from '../Api';
 
 
 const AdminHeader = () => {
-  
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selectedRole, setSelectedRole] = useState('Administrator');
+  const navbar = document.querySelector('.nav');
+
+  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+
+  const handleScroll = () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add('navbar-scroll');
+    } else {
+      navbar.classList.remove('navbar-scroll');
+    }
+  };
+
+  const handleRoleSelection = (role) => {
+    setSelectedRole(role);
+  };
+
+  window.addEventListener('scroll', handleScroll);
+
   return (
     <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
-      <div className="d-flex justify-content-center w-100">
-        <ul>
-         
-        </ul>
+      <div className="d-flex w-100 justify-content-center">
+        <div className="d-flex w-75 justify-content-between">
+          <div className="d-flex align-items-center">
+            <ButtonGroup className='mx-2'>
+              <Button color="dark">Filter</Button>
+              <Button color="dark">Clear</Button>
+            </ButtonGroup>
+            <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
+              <DropdownToggle caret color="dark">
+                {selectedRole}
+              </DropdownToggle>
+              <DropdownMenu>
+                <DropdownItem onClick={() => handleRoleSelection('Administrator')}>Administrator</DropdownItem>
+                <DropdownItem onClick={() => handleRoleSelection('Employee')}>Employee</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+          <div>
+            <Button className="mx-2" color="dark">Create Account</Button>
+          </div>
+        </div>
       </div>
     </Navbar>
   );
@@ -142,10 +177,10 @@ function AdminView() {
   return (
     <>
       <AdminHeader />
-      <div style={{ margin: '100px' }}></div>
+      <div style={{ margin: '150px' }}></div>
       <Row>
         <Col>
-          <h1 className='display-5 text-center'>Manage Accounts</h1>
+          <h5 className='display-6 text-center'>Manage Accounts</h5>
         </Col>
       </Row>
       <Row>
@@ -193,7 +228,7 @@ function AdminView() {
         <ModalHeader toggle={toggle}>Edit Account</ModalHeader>
           <div>
           {selectedAccount && formData && (
-          <div className='m-5'>
+          <div className='mx-5 my-4'>
              <FormGroup floating>
                <Input
                  type="text"
@@ -273,12 +308,12 @@ function AdminView() {
              </FormGroup>
              <Row>
                <Col sm={6}>
-                 <Button color='dark' className='mt-4 w-100' onClick={handleUpdate}>
+                 <Button color='dark' className='mt-4 mb-3 w-100' onClick={handleUpdate}>
                    Update
                  </Button>
                </Col>
                <Col sm={6}>
-                 <Button color='danger' className='mt-4 w-100' onClick={handleDelete}>
+                 <Button color='danger' className='mt-4 mb-3 w-100' onClick={handleDelete}>
                    Delete
                  </Button>
                </Col>
