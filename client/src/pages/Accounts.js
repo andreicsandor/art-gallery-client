@@ -131,7 +131,8 @@ function AccountsAdmin() {
             <Table bordered hover responsive className='table-cell-center w-75' style={{margin: 'auto'}}>
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Last Name</th>
+                  <th>First Name</th>
                   <th>Role</th>
                   <th>Gallery</th>
                   <th>Username</th>
@@ -145,7 +146,8 @@ function AccountsAdmin() {
                     onClick={() => handleClick(account)}
                     style={{ cursor: 'pointer' }}
                   >
-                  <td>{account.profile.firstName} {account.profile.lastName}</td>
+                  <td>{account.profile.lastName}</td>
+                  <td>{account.profile.firstName}</td>
                   <td>{account.profile.role}</td>
                   <td>{account.gallery}</td>
                   <td>{account.profile.username}</td>
