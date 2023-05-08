@@ -53,7 +53,7 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
               <Button color="dark" onClick={clearFilter}>Clear</Button>
             </ButtonGroup>
             <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
-              <DropdownToggle caret color="dark">
+              <DropdownToggle caret color="secondary">
                 {filterKeyword}
               </DropdownToggle>
               <DropdownMenu>
@@ -306,6 +306,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.firstName}
                  onChange={handleInputChange}
+                 placeholder="First Name"
                />
                <Label for='firstName'>First Name</Label>
              </FormGroup>
@@ -317,6 +318,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.lastName}
                  onChange={handleInputChange}
+                 placeholder="Last Name"
                />
                <Label for='lastName'>Last Name</Label>
              </FormGroup>
@@ -328,6 +330,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.username}
                  onChange={handleInputChange}
+                 placeholder="Username"
                />
                <Label for='username'>Username</Label>
              </FormGroup>
@@ -339,6 +342,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.password}
                  onChange={handleInputChange}
+                 placeholder="Password"
                />
                <Label for='password'>Password</Label>
              </FormGroup>
@@ -400,6 +404,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.firstName}
                  onChange={handleInputChange}
+                 placeholder="First Name"
                />
                <Label for='firstName'>First Name</Label>
              </FormGroup>
@@ -411,6 +416,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.lastName}
                  onChange={handleInputChange}
+                 placeholder="Last Name"
                />
                <Label for='lastName'>Last Name</Label>
              </FormGroup>
@@ -422,6 +428,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.username}
                  onChange={handleInputChange}
+                 placeholder="Username"
                />
                <Label for='username'>Username</Label>
              </FormGroup>
@@ -433,6 +440,7 @@ function AdminView() {
                  bsSize="default"
                  value={formData.password}
                  onChange={handleInputChange}
+                 placeholder="Password"
                />
                <Label for='password'>Password</Label>
              </FormGroup>
@@ -476,7 +484,7 @@ function AdminView() {
                  </Button>
                </Col>
                <Col sm={6}>
-                 <Button color='danger' className='mt-4 mb-3 w-100' onClick={handleDelete}>
+                 <Button color='secondary' className='mt-4 mb-3 w-100' onClick={handleDelete}>
                    Delete
                  </Button>
                </Col>
