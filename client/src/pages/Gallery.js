@@ -77,9 +77,6 @@ function EmployeeView() {
   );
 }
 
-
-
-
 const VisitorHeader = ({ filterExhibits, clearFilter }) => {
   const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
   const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
