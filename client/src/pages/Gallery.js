@@ -20,7 +20,6 @@ import {
   ModalHeader,
   Navbar,
   Row,
-  Table,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import FilterDTO from '../DTOs/FilterDTO';
