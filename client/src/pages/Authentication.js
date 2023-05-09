@@ -18,6 +18,19 @@ const LoginView = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const loggedInUser = Cookies.get('loggedInUser');
+    const loggedInRole = Cookies.get('loggedInRole');
+
+    if (loggedInUser && loggedInRole) {
+      if (loggedInRole === 'Administrator') {
+        navigate('/management');
+      } else if (loggedInRole === 'Employee') {
+        navigate('/inventory');
+      }
+    }
+  }, [navigate]);
       
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -30,10 +43,11 @@ const LoginView = () => {
         Cookies.set('loggedInUser', response.data.username);
         Cookies.set('loggedInRole', response.data.role);
 
-        const role = response.data.role;
-        if (role === 'Administrator') {
+        const loggedInRole = Cookies.get('loggedInRole');
+
+        if (loggedInRole === 'Administrator') {
           navigate('/management');
-        } else if (role === 'Employee') {
+        } else if (loggedInRole === 'Employee') {
           navigate('/inventory');
         } else {
           setErrorMessage('Invalid role.');
@@ -115,12 +129,19 @@ const LogoutView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Remove session cookies
-    Cookies.remove('loggedInUser');
-    Cookies.remove('loggedInRole');
-    
-    // Redirect to login page
-    navigate('/login');
+    const loggedInUser = Cookies.get('loggedInUser');
+    const loggedInRole = Cookies.get('loggedInRole');
+
+    if (loggedInUser && loggedInRole) {
+      // Remove session cookies
+      Cookies.remove('loggedInUser');
+      Cookies.remove('loggedInRole');
+      
+      // Redirect to login page
+      navigate('/login');
+    } else {
+      navigate('/login');
+    }
   }, [navigate]);
 
   return (
