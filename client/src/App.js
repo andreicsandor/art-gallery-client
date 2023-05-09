@@ -20,6 +20,7 @@ function App() {
     <div className="container-custom">
       <Routes>
         <Route path="/login" element={<LoginView />} />
+        <Route path="/logout" element={<LogoutView />} />
         <Route path="/admin" element={<AdminView />} />
         <Route path="/inventory" element={<EmployeeView />} />
         <Route path="/gallery" element={<VisitorView />} />

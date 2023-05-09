@@ -10,6 +10,7 @@ import {
   Row 
 } from 'reactstrap';
 import api from '../Api';
+import Cookies from 'js-cookie';
   
   
 const LoginView = () => {
@@ -26,6 +27,9 @@ const LoginView = () => {
         password: password,
       });
       if (response.status === 200) {
+        Cookies.set('loggedInUser', response.data.username);
+        Cookies.set('loggedInRole', response.data.role);
+
         const role = response.data.role;
         if (role === 'Administrator') {
           navigate('/management');
@@ -111,17 +115,18 @@ const LogoutView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      navigate('/');
-    };
-
-    checkAuth();
+    // Remove session cookies
+    Cookies.remove('loggedInUser');
+    Cookies.remove('loggedInRole');
+    
+    // Redirect to login page
+    navigate('/login');
   }, [navigate]);
 
   return (
     <div></div>
   );
 };
-  
+
 export { LoginView, LogoutView };
   
