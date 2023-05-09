@@ -24,6 +24,7 @@ import api from '../Api';
 
 const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  
   const [filterKeyword, setFilterKeyword] = useState('Administrator');
   
   const navbar = document.querySelector('.nav');
@@ -54,7 +55,7 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
               <Button color="dark" onClick={clearFilter}>Clear</Button>
             </ButtonGroup>
             <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
-              <DropdownToggle caret color="dark">
+              <DropdownToggle caret color="secondary">
                 {filterKeyword}
               </DropdownToggle>
               <DropdownMenu>
