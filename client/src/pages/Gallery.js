@@ -23,9 +23,10 @@ import {
   Row,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FilterDTO from '../dto/FilterDTO';
 import api from '../Api';
 import ExhibitDTO from '../dto/ExhibitDTO';
+import FilterDTO from '../dto/FilterDTO';
+import ItemDTO from '../dto/ItemDTO';
 import Cookies from 'js-cookie';
 
 
@@ -147,7 +148,7 @@ const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
   );
 };
 
-function EmployeeView() { 
+function EmployeeView() {  
   const loggedInGallery = decodeURIComponent(Cookies.get('loggedInGallery'));
 
   const [exhibits, setExhibits] = useState([]);
@@ -162,10 +163,15 @@ function EmployeeView() {
     type: 'Painting',
     year: '',
     gallery: 'The Museum of Modern Art',
+    buyer: '',
+    price: '',
+    saleDate: '',
+    deliveryDate: ''
   });
-
+  
   const [createModal, setCreateModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
+  const [sellModal, setSellModal] = useState(false);
 
   const toggleUpdateModal = () => setUpdateModal(!updateModal);
   const toggleCreateModal = () => {
@@ -179,6 +185,7 @@ function EmployeeView() {
   
     setCreateModal(!createModal);
   };
+  const toggleSellModal = () => setSellModal(!sellModal);
 
   // Check logged-in user when component mounts
   useEffect(() => {
@@ -219,10 +226,16 @@ function EmployeeView() {
     fetchGalleries();
   }, []);
 
-  const handleClick = (exhibit) => {
+  const handleClickEdit = (exhibit) => {
     setSelectedExhibit(exhibit);
     updateFormData(exhibit);
     toggleUpdateModal();
+  };
+
+  const handleClickSell = (exhibit) => {
+    setSelectedExhibit(exhibit);
+    updateFormData(exhibit);
+    toggleSellModal();
   };
 
   const updateFormData = (exhibit) => {
@@ -233,7 +246,6 @@ function EmployeeView() {
       year: exhibit.item.year,
       gallery: exhibit.gallery,
     });
-    console.log(exhibit);
   };
 
   const handleInputChange = (e) => {
@@ -319,6 +331,37 @@ function EmployeeView() {
     }
   }; 
 
+  const handleSell = async () => {  
+    try {
+      const itemDTO = new ItemDTO(
+        formData.name,
+        formData.artist,
+        formData.type,
+        formData.year,
+        formData.gallery,
+        formData.buyer,
+        formData.price,
+        formData.saleDate,
+        formData.deliveryDate
+      );
+  
+      console.log(itemDTO);
+
+      const response = await api.post(
+        `/api/sell-item/${selectedExhibit.item.id}`,
+        itemDTO
+      );
+      
+      if (response.status === 200) {
+        window.location.reload();
+      } else {
+        console.error("Failed to sell exhibit.");
+      }
+    } catch (error) {
+      console.error("An error occurred while selling the exhibit:", error);
+    }
+  }; 
+
   return (
     <>
     <EmployeeHeader
@@ -347,10 +390,10 @@ function EmployeeView() {
                
                 <Row>
                   <Col sm={6}>
-                    <Button block color='light' onClick={() => handleClick(exhibit)} className='float-right' disabled={exhibit.gallery !== loggedInGallery}>Sell</Button>
+                    <Button block color='light' onClick={() => handleClickSell(exhibit)} className='float-right' disabled={exhibit.gallery !== loggedInGallery}>Sell</Button>
                   </Col>
                   <Col sm={6}>
-                    <Button block color='light' onClick={() => handleClick(exhibit)}>Edit</Button>
+                    <Button block color='light' onClick={() => handleClickEdit(exhibit)}>Edit</Button>
                   </Col>
                 </Row>
 
@@ -389,22 +432,18 @@ function EmployeeView() {
                />
                <Label for='artist'>Artist</Label>
              </FormGroup>
-             <FormGroup>
-              <InputGroup>
-                <InputGroupText>
-                  Year
-                </InputGroupText>
+             <FormGroup floating>
                 <Input
-                type="number"
-                name="year"
-                id="year"
-                bsSize="default"
-                value={formData.year}
-                onChange={handleInputChange}
-                placeholder="----"
+                  type="number"
+                  name="year"
+                  id="year"
+                  bsSize="default"
+                  value={formData.year}
+                  onChange={handleInputChange}
+                  placeholder="Year"
                 />
-              </InputGroup>
-             </FormGroup>
+                <Label for='year'>Year</Label>
+              </FormGroup>
              <FormGroup>
               <Input
                 type="select"
@@ -473,21 +512,17 @@ function EmployeeView() {
                />
                <Label for='artist'>Artist</Label>
              </FormGroup>
-             <FormGroup>
-              <InputGroup>
-                <InputGroupText>
-                  Year
-                </InputGroupText>
+             <FormGroup floating>
                 <Input
-                type="number"
-                name="year"
-                id="year"
-                bsSize="default"
-                value={formData.year}
-                onChange={handleInputChange}
-                placeholder="1506"
+                  type="number"
+                  name="year"
+                  id="year"
+                  bsSize="default"
+                  value={formData.year}
+                  onChange={handleInputChange}
+                  placeholder="Year"
                 />
-              </InputGroup>
+                <Label for='year'>Year</Label>
              </FormGroup>
              <FormGroup>
               <Input
@@ -528,6 +563,136 @@ function EmployeeView() {
                  </Button>
                </Col>
              </Row>
+          </div>
+          )}
+          </div>
+      </Modal>
+
+      <Modal isOpen={sellModal} toggle={toggleSellModal}>
+        <ModalHeader toggle={toggleSellModal}>Sell Exhibit</ModalHeader>
+          <div>
+          {selectedExhibit && formData && (
+          <div className='mx-5 my-4'>
+             <FormGroup floating>
+               <Input
+                 type="text"
+                 name="name"
+                 id="name"
+                 bsSize="default"
+                 value={formData.name}
+                 placeholder="Name"
+                 disabled
+               />
+               <Label for='name'>Name</Label>
+             </FormGroup>
+             <FormGroup floating>
+               <Input
+                 type="text"
+                 name="artist"
+                 id="artist"
+                 bsSize="default"
+                 value={formData.artist}
+                 placeholder="Artist"
+                 disabled
+               />
+               <Label for='artist'>Artist</Label>
+             </FormGroup>
+             <FormGroup floating>
+                <Input
+                  type="number"
+                  name="year"
+                  id="year"
+                  bsSize="default"
+                  value={formData.year}
+                  placeholder="Year"
+                  disabled
+                />
+                <Label for='year'>Year</Label>
+              </FormGroup>
+             <FormGroup>
+              <Input
+                type="text"
+                name="type"
+                id="type"
+                bsSize="default"
+                value={formData.type}
+                disabled
+              >
+                <option value="Painting">Painting</option>
+                <option value="Sculpture">Sculpture</option>
+              </Input>
+             </FormGroup>
+             <FormGroup>
+               <Input
+                 type='text'
+                 name='gallery'
+                 id='gallery'
+                 bsSize='default'
+                 value={formData.gallery} 
+                 disabled
+               >
+                {galleries.map((galleryName) => (
+                  <option key={galleryName}>{galleryName}</option>
+                ))}
+               </Input>
+             </FormGroup>
+             <FormGroup floating>
+                <Input
+                  type="text"
+                  name="buyer"
+                  id="buyer"
+                  bsSize="default"
+                  value={formData.buyer}
+                  onChange={handleInputChange}
+                  placeholder="Buyer"
+                />
+                <Label for='buyer'>Buyer</Label>
+              </FormGroup>
+              <FormGroup floating>
+                <Input
+                  type="number"
+                  name="price"
+                  id="price"
+                  bsSize="default"
+                  value={formData.price}
+                  onChange={handleInputChange}
+                  placeholder="Price"
+                />
+                <Label for='price'>Price</Label>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup>
+                  <InputGroupText>
+                    Sale Date
+                  </InputGroupText>
+                  <Input
+                    type="date"
+                    name="saleDate"
+                    id="saleDate"
+                    bsSize="default"
+                    value={formData.saleDate}
+                    onChange={handleInputChange}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <FormGroup>
+                <InputGroup>
+                  <InputGroupText>
+                    Delivery Date
+                  </InputGroupText>
+                  <Input
+                    type="date"
+                    name="deliveryDate"
+                    id="deliveryDate"
+                    bsSize="default"
+                    value={formData.deliveryDate}
+                    onChange={handleInputChange}
+                  />
+                </InputGroup>
+              </FormGroup>
+              <Button color='dark' className='mt-4 mb-3 w-100' onClick={handleSell}>
+                Sell
+              </Button>
           </div>
           )}
           </div>
