@@ -114,7 +114,7 @@ function AdminView() {
     const loggedInRole = Cookies.get('loggedInRole');
 
     if (loggedInUser && loggedInRole) {
-      if (loggedInRole !== 'Employee') {
+      if (loggedInRole !== 'Administrator') {
         navigate('/login');
       }} else {
         navigate('/login');

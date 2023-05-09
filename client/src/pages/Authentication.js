@@ -47,7 +47,7 @@ const LoginView = () => {
         const loggedInRole = Cookies.get('loggedInRole');
 
         if (loggedInRole === 'Administrator') {
-          navigate('/management');
+          navigate('/admin');
         } else if (loggedInRole === 'Employee') {
           navigate('/inventory');
         } else {
