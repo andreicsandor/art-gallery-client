@@ -23,9 +23,9 @@ import {
   Row,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import FilterDTO from '../DTOs/FilterDTO';
+import FilterDTO from '../dto/FilterDTO';
 import api from '../Api';
-import ExhibitDTO from '../DTOs/ExhibitDTO';
+import ExhibitDTO from '../dto/ExhibitDTO';
 import Cookies from 'js-cookie';
 
 

@@ -18,8 +18,8 @@ import {
   Table,
 } from 'reactstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import AccountDTO from '../DTOs/AccountDTO';
-import FilterDTO from '../DTOs/FilterDTO';
+import AccountDTO from '../dto/AccountDTO';
+import FilterDTO from '../dto/FilterDTO';
 import api from '../Api';
 import Cookies from 'js-cookie';
 
