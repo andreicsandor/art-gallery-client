@@ -17,7 +17,7 @@ const LoginView = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const LoginView = () => {
 
     if (loggedInUser && loggedInRole) {
       if (loggedInRole === 'Administrator') {
-        navigate('/management');
+        navigate('/admin');
       } else if (loggedInRole === 'Employee') {
         navigate('/inventory');
       }
