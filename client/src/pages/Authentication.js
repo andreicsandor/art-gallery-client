@@ -23,7 +23,7 @@ const LoginView = () => {
   useEffect(() => {
     const loggedInUser = Cookies.get('loggedInUser');
     const loggedInRole = Cookies.get('loggedInRole');
-
+    
     if (loggedInUser && loggedInRole) {
       if (loggedInRole === 'Administrator') {
         navigate('/admin');
@@ -43,6 +43,7 @@ const LoginView = () => {
       if (response.status === 200) {
         Cookies.set('loggedInUser', response.data.username);
         Cookies.set('loggedInRole', response.data.role);
+        Cookies.set('loggedInGallery', response.data.gallery);
 
         const loggedInRole = Cookies.get('loggedInRole');
 
