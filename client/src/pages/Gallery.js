@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
+  Link 
+} from "react-router-dom"
+import { 
   Button,
   ButtonGroup,
   Card,
@@ -21,7 +24,11 @@ import {
   ModalHeader,
   Navbar,
   Row,
+  UncontrolledDropdown 
 } from 'reactstrap';
+import { 
+  ReactComponent as UserIcon 
+} from '../assets/images/three-dots.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import api from '../Api';
 import ExhibitDTO from '../dto/ExhibitDTO';
@@ -135,12 +142,19 @@ const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
                 placeholder="Name"
                 value={searchInput}
                 onChange={handleSearchInput}
-                style={{ width: '250px' }}
+                style={{ width: '30%' }}
               />
-              <Button color="dark" onClick={handleSearch} style={{marginRight: "4rem"}}>
-                Search
-              </Button>   
+              <Button className="me-5" color="dark" onClick={handleSearch}>Search</Button>   
               <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Exhibit</Button>    
+              <UncontrolledDropdown className="ms-5">
+                <DropdownToggle nav className="link-item">
+                  <UserIcon style={{ width: '20px', height: '20px' }} />
+                </DropdownToggle>
+                <DropdownMenu left>
+                  <DropdownItem divider />
+                  <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
             </div>
         </div>
       </div>
@@ -807,11 +821,9 @@ const VisitorHeader = ({ filterExhibits, clearFilter }) => {
                 placeholder="Name"
                 value={searchInput}
                 onChange={handleSearchInput}
-                style={{ width: '250px' }}
+                style={{ width: '80%' }}
               />
-              <Button color="dark" onClick={handleSearch} className="mx-1">
-                Search
-              </Button>         
+              <Button color="dark" onClick={handleSearch} className="mx-2">Search</Button>
           </div>
         </div>
       </div>

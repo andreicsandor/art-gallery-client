@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { 
+  Link 
+} from "react-router-dom"
 import {
   Button,
   ButtonGroup,
@@ -16,7 +19,11 @@ import {
   Navbar,
   Row,
   Table,
+  UncontrolledDropdown 
 } from 'reactstrap';
+import { 
+  ReactComponent as UserIcon 
+} from '../assets/images/three-dots.svg';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../dto/AccountDTO';
 import FilterDTO from '../dto/FilterDTO';
@@ -66,8 +73,16 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
               </DropdownMenu>
             </Dropdown>
           </div>
-          <div>
+          <div className="d-flex align-items-center">
             <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Account</Button>
+            <UncontrolledDropdown className="ms-5">
+                <DropdownToggle nav className="link-item">
+                  <UserIcon style={{ width: '20px', height: '20px' }} />
+                </DropdownToggle>
+                <DropdownMenu left>
+                  <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
           </div>
         </div>
       </div>
