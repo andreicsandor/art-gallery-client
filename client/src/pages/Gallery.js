@@ -342,7 +342,16 @@ function EmployeeView() {
                   <li>{exhibit.item.type}, {exhibit.item.year}</li>
                   <li>{exhibit.gallery}</li>
                 </ul>
-                <Button color='light' block onClick={() => handleClick(exhibit)}>Edit</Button>
+               
+                <Row>
+                  <Col sm={6}>
+                    <Button block color='light' onClick={() => handleClick(exhibit)}>Edit</Button>
+                  </Col>
+                  <Col sm={6}>
+                    <Button block color='light' onClick={() => handleClick(exhibit)} className='float-right'>Sell</Button>
+                  </Col>
+                </Row>
+
               </CardBody>
             </Card>
           </Col>
