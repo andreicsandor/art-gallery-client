@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   ButtonGroup,
@@ -20,6 +21,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import AccountDTO from '../DTOs/AccountDTO';
 import FilterDTO from '../DTOs/FilterDTO';
 import api from '../Api';
+import Cookies from 'js-cookie';
 
 
 const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
@@ -77,6 +79,8 @@ function AdminView() {
   const [accounts, setAccounts] = useState([]);
   const [galleries, setGalleries] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState([]);
+
+  const navigate = useNavigate();
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -103,6 +107,19 @@ function AdminView() {
   
     setCreateModal(!createModal);
   };
+
+  // Check logged-in user when component mounts
+  useEffect(() => {
+    const loggedInUser = Cookies.get('loggedInUser');
+    const loggedInRole = Cookies.get('loggedInRole');
+
+    if (loggedInUser && loggedInRole) {
+      if (loggedInRole !== 'Employee') {
+        navigate('/login');
+      }} else {
+        navigate('/login');
+      }
+    }, [navigate]);
 
   useEffect(() => {
     const fetchAccounts = async () => {

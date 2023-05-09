@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Button,
   ButtonGroup,
@@ -25,6 +26,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import FilterDTO from '../DTOs/FilterDTO';
 import api from '../Api';
 import ExhibitDTO from '../DTOs/ExhibitDTO';
+import Cookies from 'js-cookie';
 
 
 const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
@@ -150,6 +152,8 @@ function EmployeeView() {
   const [galleries, setGalleries] = useState([]);
   const [selectedExhibit, setSelectedExhibit] = useState([]);
 
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: '',
     artist: '',
@@ -173,6 +177,19 @@ function EmployeeView() {
   
     setCreateModal(!createModal);
   };
+
+  // Check logged-in user when component mounts
+  useEffect(() => {
+    const loggedInUser = Cookies.get('loggedInUser');
+    const loggedInRole = Cookies.get('loggedInRole');
+
+    if (loggedInUser && loggedInRole) {
+      if (loggedInRole !== 'Employee') {
+        navigate('/login');
+      }} else {
+        navigate('/login');
+      }
+    }, [navigate]);
   
   useEffect(() => {
     const fetchExhibits = async () => {
