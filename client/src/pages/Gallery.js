@@ -21,6 +21,7 @@ import {
   InputGroupText,
   Label,
   Modal,
+  ModalBody,
   ModalHeader,
   Navbar,
   Row,
@@ -35,9 +36,19 @@ import ExhibitDTO from '../dto/ExhibitDTO';
 import FilterDTO from '../dto/FilterDTO';
 import ItemDTO from '../dto/ItemDTO';
 import Cookies from 'js-cookie';
+import { 
+  downloadExhibitsTXT, 
+  downloadExhibitsCSV, 
+  downloadExhibitsJSON
+} from '../services/ExporterExhibits';
+import { 
+  downloadItemsTXT, 
+  downloadItemsCSV, 
+  downloadItemsJSON
+} from '../services/ExporterItems';
 
 
-const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
+const EmployeeHeader = ({ toggleCreateModal, toggleExportExhibitsModal, toggleExportItemsModal, filterExhibits, clearFilter }) => {
   const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
   const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
   const [searchInput, setSearchInput] = useState('');
@@ -151,6 +162,8 @@ const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
                   <UserIcon style={{ width: '20px', height: '20px' }} />
                 </DropdownToggle>
                 <DropdownMenu left>
+                  <DropdownItem onClick={toggleExportExhibitsModal}>Exhibits data</DropdownItem>
+                  <DropdownItem onClick={toggleExportItemsModal}>Sales data</DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
                 </DropdownMenu>
@@ -162,10 +175,11 @@ const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
   );
 };
 
-function EmployeeView() {  
+function EmployeeView() { 
   const loggedInGallery = decodeURIComponent(Cookies.get('loggedInGallery'));
 
   const [exhibits, setExhibits] = useState([]);
+  const [items, setItems] = useState([]);
   const [galleries, setGalleries] = useState([]);
   const [selectedExhibit, setSelectedExhibit] = useState([]);
 
@@ -186,6 +200,8 @@ function EmployeeView() {
   const [createModal, setCreateModal] = useState(false);
   const [updateModal, setUpdateModal] = useState(false);
   const [sellModal, setSellModal] = useState(false);
+  const [exportExhibitsModal, setExportExhibitsModal] = useState(false);
+  const [exportItemsModal, setExportItemsModal] = useState(false);
 
   const toggleUpdateModal = () => setUpdateModal(!updateModal);
   const toggleCreateModal = () => {
@@ -200,6 +216,8 @@ function EmployeeView() {
     setCreateModal(!createModal);
   };
   const toggleSellModal = () => setSellModal(!sellModal);
+  const toggleExportExhibitsModal = () => setExportExhibitsModal(!exportExhibitsModal);
+  const toggleExportItemsModal = () => setExportItemsModal(!exportItemsModal);
 
   // Check logged-in user when component mounts
   useEffect(() => {
@@ -225,6 +243,20 @@ function EmployeeView() {
     };
   
     fetchExhibits();
+  }, []);
+
+  useEffect(() => {
+    const fetchItems = async () => {
+      try {
+        const response = await api.get('/api/get-items')
+        setItems(response.data);
+        console.log(response.data);
+      } catch (error) {
+        console.error('An error occurred while fetching items:', error);
+      }
+    };
+  
+    fetchItems();
   }, []);
 
   useEffect(() => {
@@ -380,6 +412,8 @@ function EmployeeView() {
     <>
     <EmployeeHeader
         toggleCreateModal={toggleCreateModal}
+        toggleExportExhibitsModal={toggleExportExhibitsModal}
+        toggleExportItemsModal={toggleExportItemsModal}
         filterExhibits={filterExhibits}
         clearFilter={clearFilter}
     />
@@ -711,6 +745,79 @@ function EmployeeView() {
           )}
           </div>
       </Modal>
+
+      <Modal isOpen={exportExhibitsModal} toggle={toggleExportExhibitsModal}>
+        <ModalHeader toggle={toggleExportExhibitsModal}>Export Exhibits Data</ModalHeader>
+        <ModalBody>
+          <Button
+            color="light"
+            className="mb-2 w-100"
+            onClick={() => {
+              downloadExhibitsCSV(exhibits);
+              toggleExportExhibitsModal();
+            }}
+          >
+            Download CSV
+          </Button>
+          <Button
+            color="light"
+            className="mb-2 w-100"
+            onClick={() => {
+              downloadExhibitsTXT(exhibits);
+              toggleExportExhibitsModal();
+            }}
+          >
+            Download TXT
+          </Button>
+          <Button
+            color="light"
+            className="mb-2 w-100"
+            onClick={() => {
+              downloadExhibitsJSON(exhibits);
+              toggleExportExhibitsModal();
+            }}
+          >
+            Download JSON
+          </Button>
+        </ModalBody>
+      </Modal>
+
+      <Modal isOpen={exportItemsModal} toggle={toggleExportItemsModal}>
+        <ModalHeader toggle={toggleExportItemsModal}>Export Sales Data</ModalHeader>
+        <ModalBody>
+          <Button
+            color="light"
+            className="mb-2 w-100"
+            onClick={() => {
+              downloadItemsCSV(items);
+              toggleExportItemsModal();
+            }}
+          >
+            Download CSV
+          </Button>
+          <Button
+            color="light"
+            className="mb-2 w-100"
+            onClick={() => {
+              downloadItemsTXT(items);
+              toggleExportItemsModal();
+            }}
+          >
+            Download TXT
+          </Button>
+          <Button
+            color="light"
+            className="mb-2 w-100"
+            onClick={() => {
+              downloadItemsJSON(items);
+              toggleExportItemsModal();
+            }}
+          >
+            Download JSON
+          </Button>
+        </ModalBody>
+      </Modal>
+
     </div>
     </>
   );
