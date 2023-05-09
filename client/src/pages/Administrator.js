@@ -59,6 +59,7 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
       <div className="d-flex w-100 justify-content-center">
         <div className="d-flex w-75 justify-content-between">
           <div className="d-flex align-items-center">
+            <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Account</Button>
             <ButtonGroup className='mx-2'>
               <Button color="dark" onClick={() => filterAccounts(filterKeyword)}>Filter</Button>
               <Button color="dark" onClick={clearFilter}>Clear</Button>
@@ -74,7 +75,6 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
             </Dropdown>
           </div>
           <div className="d-flex align-items-center">
-            <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Account</Button>
             <UncontrolledDropdown className="ms-5">
                 <DropdownToggle nav className="link-item">
                   <UserIcon style={{ width: '20px', height: '20px' }} />

@@ -110,6 +110,7 @@ const EmployeeHeader = ({ toggleCreateModal, toggleExportExhibitsModal, toggleEx
       <div className="d-flex w-100 justify-content-center">
         <div className="d-flex w-75 justify-content-between">
           <div className="d-flex align-items-center">
+            <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Exhibit</Button>
             <ButtonGroup className='mx-2'>
               <Button color="dark" onClick={() => filterExhibits(filterType, filterKeyword)}>Filter</Button>
               <Button color="dark" onClick={clearFilter}>Clear</Button>
@@ -147,17 +148,16 @@ const EmployeeHeader = ({ toggleCreateModal, toggleExportExhibitsModal, toggleEx
             </Dropdown>
             </div>
             <div className="d-flex align-items-center">       
+              <Button className="mx-2" color="dark" onClick={handleSearch}>Search</Button>    
               <Input
-                className="mx-2"
+                className="ms-2 me-4"
                 type="text"
                 placeholder="Name"
                 value={searchInput}
                 onChange={handleSearchInput}
-                style={{ width: '30%' }}
-              />
-              <Button className="me-5" color="dark" onClick={handleSearch}>Search</Button>   
-              <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Exhibit</Button>    
-              <UncontrolledDropdown className="ms-5">
+                style={{ width: '80%' }}
+              />   
+              <UncontrolledDropdown className="ms-4">
                 <DropdownToggle nav className="link-item">
                   <UserIcon style={{ width: '20px', height: '20px' }} />
                 </DropdownToggle>
