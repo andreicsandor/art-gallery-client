@@ -144,9 +144,7 @@ const LogoutView = () => {
     }
   }, [navigate]);
 
-  return (
-    <div></div>
-  );
+  return null;
 };
 
 export { LoginView, LogoutView };
