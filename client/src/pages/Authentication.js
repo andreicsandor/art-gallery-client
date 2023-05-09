@@ -76,7 +76,7 @@ const LoginView = () => {
     <Container className="my-5">
       <Row>
         <Col>
-          <h1 className="display-5 text-center mb-5">Welcome to Art Gallery</h1>
+          <h1 className="display-4 text-center" style={{marginBottom: "5rem"}}>Welcome to Art Gallery</h1>
         </Col>
       </Row>
       <Row className="justify-content-center">
