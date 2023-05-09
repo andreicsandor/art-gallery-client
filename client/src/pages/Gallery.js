@@ -148,6 +148,8 @@ const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
 };
 
 function EmployeeView() { 
+  const loggedInGallery = decodeURIComponent(Cookies.get('loggedInGallery'));
+
   const [exhibits, setExhibits] = useState([]);
   const [galleries, setGalleries] = useState([]);
   const [selectedExhibit, setSelectedExhibit] = useState([]);
@@ -345,10 +347,10 @@ function EmployeeView() {
                
                 <Row>
                   <Col sm={6}>
-                    <Button block color='light' onClick={() => handleClick(exhibit)}>Edit</Button>
+                    <Button block color='light' onClick={() => handleClick(exhibit)} className='float-right' disabled={exhibit.gallery !== loggedInGallery}>Sell</Button>
                   </Col>
                   <Col sm={6}>
-                    <Button block color='light' onClick={() => handleClick(exhibit)} className='float-right'>Sell</Button>
+                    <Button block color='light' onClick={() => handleClick(exhibit)}>Edit</Button>
                   </Col>
                 </Row>
 
