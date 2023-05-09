@@ -401,7 +401,7 @@ function EmployeeView() {
                 bsSize="default"
                 value={formData.year}
                 onChange={handleInputChange}
-                placeholder="1506"
+                placeholder="----"
                 />
               </InputGroup>
              </FormGroup>
