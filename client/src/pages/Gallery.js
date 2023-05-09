@@ -130,7 +130,7 @@ const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
               <Input
                 className="mx-2"
                 type="text"
-                placeholder="Search Name"
+                placeholder="Name"
                 value={searchInput}
                 onChange={handleSearchInput}
                 style={{ width: '250px' }}
@@ -139,7 +139,7 @@ const EmployeeHeader = ({ toggleCreateModal, filterExhibits, clearFilter }) => {
                 Search
               </Button>   
               <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Exhibit</Button>    
-          </div>
+            </div>
         </div>
       </div>
     </Navbar>
@@ -612,7 +612,7 @@ const VisitorHeader = ({ filterExhibits, clearFilter }) => {
               <Input
                 className="mx-2"
                 type="text"
-                placeholder="Search Name"
+                placeholder="Name"
                 value={searchInput}
                 onChange={handleSearchInput}
                 style={{ width: '250px' }}
