@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   Button,
   ButtonGroup,
@@ -14,13 +15,22 @@ import {
   Input,
   Navbar,
   Row,
+  UncontrolledDropdown,
 } from "reactstrap";
+import { ReactComponent as UserIcon } from "../assets/images/list.svg";
+import { ReactComponent as FlagIcon } from "../assets/images/flag.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import api from "../Api";
 import FilterDTO from "../dto/FilterDTO";
+import Cookies from "js-cookie";
+import { useLanguage } from "../services/LanguageProvider";
 
 function VisitorView() {
-  const VisitorHeader = ({ filterExhibits, clearFilter }) => {
+  const VisitorHeader = ({
+    filterExhibits,
+    clearFilter,
+    handleLanguageChange,
+  }) => {
     const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
     const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
     const [searchInput, setSearchInput] = useState("");
@@ -92,10 +102,10 @@ function VisitorView() {
                   color="dark"
                   onClick={() => filterExhibits(filterType, filterKeyword)}
                 >
-                  Filter
+                  {translations["generic.filterButton"]}
                 </Button>
                 <Button color="dark" onClick={clearFilter}>
-                  Clear
+                  {translations["generic.clearButton"]}
                 </Button>
               </ButtonGroup>
               <Dropdown
@@ -108,15 +118,15 @@ function VisitorView() {
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem onClick={() => handleFilterType("Type")}>
-                    Type
+                    {translations["gallery.optionType"]}
                   </DropdownItem>
                   <DropdownItem onClick={() => handleFilterType("Artist")}>
-                    Artist
+                    {translations["gallery.optionArtist"]}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
               <Dropdown
-                className="mx-2"
+                className="ms-2 me-4"
                 isOpen={dropdownKeywordOpen}
                 toggle={toggleDropdownKeyword}
               >
@@ -136,32 +146,64 @@ function VisitorView() {
                   ) : (
                     <>
                       <DropdownItem
-                        onClick={() => handleFilterKeyword("Administrator")}
+                        onClick={() => handleFilterKeyword("Painting")}
                       >
-                        Administrator
+                        {translations["gallery.optionPainting"]}
                       </DropdownItem>
                       <DropdownItem
-                        onClick={() => handleFilterKeyword("Employee")}
+                        onClick={() => handleFilterKeyword("Sculpture")}
                       >
-                        Employee
+                        {translations["gallery.optionSculpture"]}
                       </DropdownItem>
                     </>
                   )}
                 </DropdownMenu>
               </Dropdown>
-            </div>
-            <div className="d-flex align-items-center">
+              <Button className="ms-4 me-2" color="dark" onClick={handleSearch}>
+                {translations["generic.searchButton"]}
+              </Button>
               <Input
-                className="mx-2"
+                className="ms-2 me-5"
                 type="text"
-                placeholder="Name"
+                placeholder={translations["gallery.name"]}
                 value={searchInput}
                 onChange={handleSearchInput}
-                style={{ width: "80%" }}
+                style={{ width: "300px" }}
               />
-              <Button color="dark" onClick={handleSearch} className="mx-2">
-                Search
-              </Button>
+            </div>
+            <div className="d-flex align-items-center">
+              <UncontrolledDropdown className="me-4">
+                <DropdownToggle nav className="link-item">
+                  <FlagIcon style={{ width: "20px", height: "20px" }} />
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem onClick={() => handleLanguageChange("en")}>
+                    {translations["menu.english"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("fr")}>
+                    {translations["menu.french"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("es")}>
+                    {translations["menu.spanish"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("ro")}>
+                    {translations["menu.romanian"]}
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+              <UncontrolledDropdown className="ms-4">
+                <DropdownToggle nav className="link-item">
+                  <UserIcon style={{ width: "20px", height: "20px" }} />
+                </DropdownToggle>
+                <DropdownMenu left>
+                  <DropdownItem>
+                    <Link to="/login">
+                      {" "}
+                      {translations["generic.homeButton"]}
+                    </Link>
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
             </div>
           </div>
         </div>
@@ -169,7 +211,25 @@ function VisitorView() {
     );
   };
 
+  const { translations, changeLanguage } = useLanguage();
+
   const [exhibits, setExhibits] = useState([]);
+
+  // Check logged-in user when component mounts
+  useEffect(() => {
+    const savedLanguage = Cookies.get("language");
+
+    if (savedLanguage) {
+      changeLanguage(savedLanguage);
+    } else {
+      Cookies.set("language", "en");
+    }
+  }, [changeLanguage]);
+
+  const handleLanguageChange = (language) => {
+    changeLanguage(language);
+    Cookies.set("language", language);
+  };
 
   useEffect(() => {
     const fetchExhibits = async () => {
@@ -205,13 +265,16 @@ function VisitorView() {
   return (
     <>
       <VisitorHeader
+        handleLanguageChange={handleLanguageChange}
         filterExhibits={filterExhibits}
         clearFilter={clearFilter}
       />
       <div style={{ margin: "150px" }}></div>
       <Row>
         <Col>
-          <h1 className="display-5 text-center">Exhibits</h1>
+          <h1 className="display-5 text-center">
+            {translations["gallery.title"]}
+          </h1>
         </Col>
       </Row>
       <div className="m-5">

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
+  ButtonGroup,
   Container,
   Col,
   Form,
@@ -25,6 +26,13 @@ const LoginView = () => {
   useEffect(() => {
     const loggedInUser = Cookies.get("loggedInUser");
     const loggedInRole = Cookies.get("loggedInRole");
+    const savedLanguage = Cookies.get("language");
+
+    if (savedLanguage) {
+      changeLanguage(savedLanguage);
+    } else {
+      Cookies.set("language", "en");
+    }
 
     if (loggedInUser && loggedInRole) {
       if (loggedInRole === "Administrator") {
@@ -33,7 +41,12 @@ const LoginView = () => {
         navigate("/inventory");
       }
     }
-  }, [navigate]);
+  }, [navigate, changeLanguage]);
+
+  const handleLanguageChange = (language) => {
+    changeLanguage(language);
+    Cookies.set("language", language);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -82,14 +95,34 @@ const LoginView = () => {
       <Container className="my-5">
         <Row>
           <Col>
-            <h1
-              className="display-4 text-center"
-              style={{ marginBottom: "5rem" }}
-            >
-              {translations['login.subtitle']}
+            <h1 className="mb-3 display-4 text-center">
+              {translations["login.title"]}
             </h1>
           </Col>
         </Row>
+
+        <Row
+          className="justify-content-center"
+          style={{ marginBottom: "5rem" }}
+        >
+          <Col md={4} className="d-flex justify-content-center">
+            <ButtonGroup>
+              <Button color="light" onClick={() => handleLanguageChange("en")}>
+                {translations["menu.english"]}
+              </Button>
+              <Button color="light" onClick={() => handleLanguageChange("fr")}>
+                {translations["menu.french"]}
+              </Button>
+              <Button color="light" onClick={() => handleLanguageChange("es")}>
+                {translations["menu.spanish"]}
+              </Button>
+              <Button color="light" onClick={() => handleLanguageChange("ro")}>
+                {translations["menu.romanian"]}
+              </Button>
+            </ButtonGroup>
+          </Col>
+        </Row>
+
         <Row className="justify-content-center">
           <Col md={4}>
             <Form onSubmit={handleSubmit}>
@@ -98,8 +131,8 @@ const LoginView = () => {
                   type="text"
                   name="username"
                   id="username"
-                  placeholder="Username"
-                  bsSize="default"
+                  placeholder={translations["account.username"]}
+                  bsSize="lg"
                   className="mb-3"
                   value={username}
                   onChange={(event) => setUsername(event.target.value)}
@@ -110,23 +143,28 @@ const LoginView = () => {
                   type="password"
                   name="password"
                   id="password"
-                  placeholder="Password"
-                  bsSize="default"
-                  className="mb-5"
+                  placeholder={translations["account.password"]}
+                  bsSize="lg"
                   value={password}
                   onChange={(event) => setPassword(event.target.value)}
+                  style={{ marginBottom: "3rem" }}
                 />
               </FormGroup>
 
               <Row>
                 <Col>
-                  <Button color="dark" block>
-                    Login
+                  <Button color="dark" size="lg" block>
+                    {translations["generic.loginButton"]}
                   </Button>
                 </Col>
                 <Col>
-                  <Button color="dark" block onClick={handleVisitGallery}>
-                    Visit Gallery
+                  <Button
+                    color="dark"
+                    size="lg"
+                    block
+                    onClick={handleVisitGallery}
+                  >
+                    {translations["login.visitButton"]}
                   </Button>
                 </Col>
               </Row>

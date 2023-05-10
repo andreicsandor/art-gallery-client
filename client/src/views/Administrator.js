@@ -19,15 +19,22 @@ import {
   Table,
   UncontrolledDropdown,
 } from "reactstrap";
-import { ReactComponent as UserIcon } from "../assets/images/three-dots.svg";
+import { ReactComponent as UserIcon } from "../assets/images/list.svg";
+import { ReactComponent as FlagIcon } from "../assets/images/flag.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import AccountDTO from "../dto/AccountDTO";
 import FilterDTO from "../dto/FilterDTO";
 import api from "../Api";
 import Cookies from "js-cookie";
+import { useLanguage } from "../services/LanguageProvider";
 
 function AdminView() {
-  const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
+  const AdminHeader = ({
+    handleLanguageChange,
+    toggleCreateModal,
+    filterAccounts,
+    clearFilter,
+  }) => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
     const [filterKeyword, setFilterKeyword] = useState("Administrator");
@@ -59,17 +66,17 @@ function AdminView() {
           <div className="d-flex w-75 justify-content-between">
             <div className="d-flex align-items-center">
               <Button className="mx-2" color="dark" onClick={toggleCreateModal}>
-                Create Account
+                {translations["generic.createButton"]}
               </Button>
               <ButtonGroup className="mx-2">
                 <Button
                   color="dark"
                   onClick={() => filterAccounts(filterKeyword)}
                 >
-                  Filter
+                  {translations["generic.filterButton"]}
                 </Button>
                 <Button color="dark" onClick={clearFilter}>
-                  Clear
+                  {translations["generic.clearButton"]}
                 </Button>
               </ButtonGroup>
               <Dropdown
@@ -84,22 +91,43 @@ function AdminView() {
                   <DropdownItem
                     onClick={() => handleFilterKeyword("Administrator")}
                   >
-                    Administrator
+                    {translations["account.optionAdmin"]}
                   </DropdownItem>
                   <DropdownItem onClick={() => handleFilterKeyword("Employee")}>
-                    Employee
+                    {translations["account.optionEmployee"]}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
             <div className="d-flex align-items-center">
-              <UncontrolledDropdown className="ms-5">
+              <UncontrolledDropdown className="me-4">
+                <DropdownToggle nav className="link-item">
+                  <FlagIcon style={{ width: "20px", height: "20px" }} />
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem onClick={() => handleLanguageChange("en")}>
+                    {translations["menu.english"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("fr")}>
+                    {translations["menu.french"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("es")}>
+                    {translations["menu.spanish"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("ro")}>
+                    {translations["menu.romanian"]}
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
+              <UncontrolledDropdown className="ms-4">
                 <DropdownToggle nav className="link-item">
                   <UserIcon style={{ width: "20px", height: "20px" }} />
                 </DropdownToggle>
                 <DropdownMenu left>
                   <DropdownItem>
-                    <Link to="/logout">Logout</Link>
+                    <Link to="/logout">
+                      {translations["generic.logoutButton"]}
+                    </Link>
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
@@ -109,6 +137,8 @@ function AdminView() {
       </Navbar>
     );
   };
+
+  const { translations, changeLanguage } = useLanguage();
 
   const [accounts, setAccounts] = useState([]);
   const [galleries, setGalleries] = useState([]);
@@ -146,6 +176,13 @@ function AdminView() {
   useEffect(() => {
     const loggedInUser = Cookies.get("loggedInUser");
     const loggedInRole = Cookies.get("loggedInRole");
+    const savedLanguage = Cookies.get("language");
+
+    if (savedLanguage) {
+      changeLanguage(savedLanguage);
+    } else {
+      Cookies.set("language", "en");
+    }
 
     if (loggedInUser && loggedInRole) {
       if (loggedInRole !== "Administrator") {
@@ -154,7 +191,12 @@ function AdminView() {
     } else {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, changeLanguage]);
+
+  const handleLanguageChange = (language) => {
+    changeLanguage(language);
+    Cookies.set("language", language);
+  };
 
   useEffect(() => {
     const fetchAccounts = async () => {
@@ -307,11 +349,14 @@ function AdminView() {
         toggleCreateModal={toggleCreateModal}
         filterAccounts={filterAccounts}
         clearFilter={clearFilter}
+        handleLanguageChange={handleLanguageChange}
       />
       <div style={{ margin: "150px" }}></div>
       <Row>
         <Col>
-          <h1 className="display-5 text-center">Manage Accounts</h1>
+          <h1 className="display-5 text-center">
+            {translations["account.title"]}
+          </h1>
         </Col>
       </Row>
       <Row>
@@ -325,12 +370,12 @@ function AdminView() {
           >
             <thead>
               <tr>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Role</th>
-                <th>Gallery</th>
-                <th>Username</th>
-                <th>Password</th>
+                <th>{translations["account.surname"]}</th>
+                <th>{translations["account.name"]}</th>
+                <th>{translations["account.role"]}</th>
+                <th>{translations["account.gallery"]}</th>
+                <th>{translations["account.username"]}</th>
+                <th>{translations["account.password"]}</th>
               </tr>
             </thead>
             <tbody>
@@ -362,7 +407,9 @@ function AdminView() {
       </Row>
 
       <Modal isOpen={createModal} toggle={toggleCreateModal}>
-        <ModalHeader toggle={toggleCreateModal}>Create Account</ModalHeader>
+        <ModalHeader toggle={toggleCreateModal}>
+          {translations["account.createTitle"]}
+        </ModalHeader>
         <div>
           {formData && (
             <div className="mx-5 my-4">
@@ -374,9 +421,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  placeholder="First Name"
+                  placeholder={translations["account.name"]}
                 />
-                <Label for="firstName">First Name</Label>
+                <Label for="firstName">{translations["account.name"]}</Label>
               </FormGroup>
               <FormGroup floating>
                 <Input
@@ -386,9 +433,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  placeholder="Last Name"
+                  placeholder={translations["account.surname"]}
                 />
-                <Label for="lastName">Last Name</Label>
+                <Label for="lastName">{translations["account.surname"]}</Label>
               </FormGroup>
               <FormGroup floating>
                 <Input
@@ -398,9 +445,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.username}
                   onChange={handleInputChange}
-                  placeholder="Username"
+                  placeholder={translations["account.username"]}
                 />
-                <Label for="username">Username</Label>
+                <Label for="username">{translations["account.username"]}</Label>
               </FormGroup>
               <FormGroup floating>
                 <Input
@@ -410,9 +457,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="Password"
+                  placeholder={translations["account.password"]}
                 />
-                <Label for="password">Password</Label>
+                <Label for="password">{translations["account.password"]}</Label>
               </FormGroup>
               <FormGroup>
                 <Input
@@ -425,8 +472,12 @@ function AdminView() {
                     handleInputChange(e);
                   }}
                 >
-                  <option>Administrator</option>
-                  <option>Employee</option>
+                  <option value="Administrator">
+                    {translations["account.optionAdmin"]}
+                  </option>
+                  <option value="Employee">
+                    {translations["account.optionEmployee"]}
+                  </option>
                 </Input>
               </FormGroup>
               <FormGroup>
@@ -455,7 +506,7 @@ function AdminView() {
                     className="mt-4 mb-3 w-100"
                     onClick={handleCreate}
                   >
-                    Create
+                    {translations["generic.createButton"]}
                   </Button>
                 </Col>
               </Row>
@@ -465,7 +516,9 @@ function AdminView() {
       </Modal>
 
       <Modal isOpen={updateModal} toggle={toggleUpdateModal}>
-        <ModalHeader toggle={toggleUpdateModal}>Edit Account</ModalHeader>
+        <ModalHeader toggle={toggleUpdateModal}>
+          {translations["account.updateTitle"]}
+        </ModalHeader>
         <div>
           {selectedAccount && formData && (
             <div className="mx-5 my-4">
@@ -477,9 +530,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.firstName}
                   onChange={handleInputChange}
-                  placeholder="First Name"
+                  placeholder={translations["account.name"]}
                 />
-                <Label for="firstName">First Name</Label>
+                <Label for="firstName">{translations["account.name"]}</Label>
               </FormGroup>
               <FormGroup floating>
                 <Input
@@ -489,9 +542,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.lastName}
                   onChange={handleInputChange}
-                  placeholder="Last Name"
+                  placeholder={translations["account.surname"]}
                 />
-                <Label for="lastName">Last Name</Label>
+                <Label for="lastName">{translations["account.surname"]}</Label>
               </FormGroup>
               <FormGroup floating>
                 <Input
@@ -501,9 +554,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.username}
                   onChange={handleInputChange}
-                  placeholder="Username"
+                  placeholder={translations["account.username"]}
                 />
-                <Label for="username">Username</Label>
+                <Label for="username">{translations["account.username"]}</Label>
               </FormGroup>
               <FormGroup floating>
                 <Input
@@ -513,9 +566,9 @@ function AdminView() {
                   bsSize="default"
                   value={formData.password}
                   onChange={handleInputChange}
-                  placeholder="Password"
+                  placeholder={translations["account.password"]}
                 />
-                <Label for="password">Password</Label>
+                <Label for="password">{translations["account.password"]}</Label>
               </FormGroup>
               <FormGroup>
                 <Input
@@ -558,7 +611,7 @@ function AdminView() {
                     className="mt-4 mb-3 w-100"
                     onClick={handleUpdate}
                   >
-                    Update
+                    {translations["generic.updateButton"]}
                   </Button>
                 </Col>
                 <Col sm={6}>
@@ -567,7 +620,7 @@ function AdminView() {
                     className="mt-4 mb-3 w-100"
                     onClick={handleDelete}
                   >
-                    Delete
+                    {translations["generic.deleteButton"]}
                   </Button>
                 </Col>
               </Row>

@@ -26,7 +26,8 @@ import {
   UncontrolledDropdown,
 } from "reactstrap";
 import { DoughnutChart, PieChart } from "../services/ChartsBuilder";
-import { ReactComponent as UserIcon } from "../assets/images/three-dots.svg";
+import { ReactComponent as UserIcon } from "../assets/images/list.svg";
+import { ReactComponent as FlagIcon } from "../assets/images/flag.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
 import api from "../Api";
 import ExhibitDTO from "../dto/ExhibitDTO";
@@ -43,9 +44,11 @@ import {
   downloadItemsCSV,
   downloadItemsJSON,
 } from "../services/ItemsExporter";
+import { useLanguage } from "../services/LanguageProvider";
 
 function EmployeeView() {
   const EmployeeHeader = ({
+    handleLanguageChange,
     toggleCreateModal,
     toggleExportExhibitsModal,
     toggleExportItemsModal,
@@ -119,18 +122,22 @@ function EmployeeView() {
         <div className="d-flex w-100 justify-content-center">
           <div className="d-flex w-75 justify-content-between">
             <div className="d-flex align-items-center">
-              <Button className="mx-2" color="dark" onClick={toggleCreateModal}>
-                Create Exhibit
+              <Button
+                className="ms-2 me-4"
+                color="dark"
+                onClick={toggleCreateModal}
+              >
+                {translations["generic.createButton"]}
               </Button>
-              <ButtonGroup className="mx-2">
+              <ButtonGroup className="ms-4 me-2">
                 <Button
                   color="dark"
                   onClick={() => filterExhibits(filterType, filterKeyword)}
                 >
-                  Filter
+                  {translations["generic.filterButton"]}
                 </Button>
                 <Button color="dark" onClick={clearFilter}>
-                  Clear
+                  {translations["generic.clearButton"]}
                 </Button>
               </ButtonGroup>
               <Dropdown
@@ -143,15 +150,15 @@ function EmployeeView() {
                 </DropdownToggle>
                 <DropdownMenu>
                   <DropdownItem onClick={() => handleFilterType("Type")}>
-                    Type
+                    {translations["gallery.optionType"]}
                   </DropdownItem>
                   <DropdownItem onClick={() => handleFilterType("Artist")}>
-                    Artist
+                    {translations["gallery.optionArtist"]}
                   </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
               <Dropdown
-                className="mx-2"
+                className="ms-2 me-4"
                 isOpen={dropdownKeywordOpen}
                 toggle={toggleDropdownKeyword}
               >
@@ -171,50 +178,72 @@ function EmployeeView() {
                   ) : (
                     <>
                       <DropdownItem
-                        onClick={() => handleFilterKeyword("Administrator")}
+                        onClick={() => handleFilterKeyword("Painting")}
                       >
-                        Administrator
+                        {translations["gallery.optionPainting"]}
                       </DropdownItem>
                       <DropdownItem
-                        onClick={() => handleFilterKeyword("Employee")}
+                        onClick={() => handleFilterKeyword("Sculpture")}
                       >
-                        Employee
+                        {translations["gallery.optionSculpture"]}
                       </DropdownItem>
                     </>
                   )}
                 </DropdownMenu>
               </Dropdown>
-            </div>
-            <div className="d-flex align-items-center">
-              <Button className="mx-2" color="dark" onClick={handleSearch}>
-                Search
+              <Button className="ms-4 me-2" color="dark" onClick={handleSearch}>
+                {translations["generic.searchButton"]}
               </Button>
               <Input
-                className="ms-2 me-4"
+                className="ms-2 me-5"
                 type="text"
-                placeholder="Name"
+                placeholder={translations["gallery.name"]}
                 value={searchInput}
                 onChange={handleSearchInput}
-                style={{ width: "80%" }}
+                style={{ width: "300px" }}
               />
+            </div>
+            <div className="d-flex align-items-center">
+              <UncontrolledDropdown className="me-4">
+                <DropdownToggle nav className="link-item">
+                  <FlagIcon style={{ width: "20px", height: "20px" }} />
+                </DropdownToggle>
+                <DropdownMenu right>
+                  <DropdownItem onClick={() => handleLanguageChange("en")}>
+                    {translations["menu.english"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("fr")}>
+                    {translations["menu.french"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("es")}>
+                    {translations["menu.spanish"]}
+                  </DropdownItem>
+                  <DropdownItem onClick={() => handleLanguageChange("ro")}>
+                    {translations["menu.romanian"]}
+                  </DropdownItem>
+                </DropdownMenu>
+              </UncontrolledDropdown>
               <UncontrolledDropdown className="ms-4">
                 <DropdownToggle nav className="link-item">
                   <UserIcon style={{ width: "20px", height: "20px" }} />
                 </DropdownToggle>
                 <DropdownMenu left>
                   <DropdownItem onClick={toggleStatisticsModal}>
-                    Statistics
+                    {translations["generic.statisticsButton"]}
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem onClick={toggleExportExhibitsModal}>
-                    Exhibits data
+                    {translations["generic.exhibitsDataButton"]}
                   </DropdownItem>
                   <DropdownItem onClick={toggleExportItemsModal}>
-                    Sales data
+                    {translations["generic.salesDataButton"]}
                   </DropdownItem>
                   <DropdownItem divider />
                   <DropdownItem>
-                    <Link to="/logout">Logout</Link>
+                    <Link to="/logout">
+                      {" "}
+                      {translations["generic.logoutButton"]}
+                    </Link>
                   </DropdownItem>
                 </DropdownMenu>
               </UncontrolledDropdown>
@@ -224,6 +253,8 @@ function EmployeeView() {
       </Navbar>
     );
   };
+
+  const { translations, changeLanguage } = useLanguage();
 
   const loggedInGallery = decodeURIComponent(Cookies.get("loggedInGallery"));
 
@@ -278,6 +309,13 @@ function EmployeeView() {
   useEffect(() => {
     const loggedInUser = Cookies.get("loggedInUser");
     const loggedInRole = Cookies.get("loggedInRole");
+    const savedLanguage = Cookies.get("language");
+
+    if (savedLanguage) {
+      changeLanguage(savedLanguage);
+    } else {
+      Cookies.set("language", "en");
+    }
 
     if (loggedInUser && loggedInRole) {
       if (loggedInRole !== "Employee") {
@@ -286,7 +324,12 @@ function EmployeeView() {
     } else {
       navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, changeLanguage]);
+
+  const handleLanguageChange = (language) => {
+    changeLanguage(language);
+    Cookies.set("language", language);
+  };
 
   useEffect(() => {
     const fetchExhibits = async () => {
@@ -517,7 +560,10 @@ function EmployeeView() {
     });
 
     return {
-      labels: ["Sculptures", "Paintings"],
+      labels: [
+        translations["gallery.optionSculptures"],
+        translations["gallery.optionPaintings"],
+      ],
       datasets: [
         {
           data: [sculptures, paintings],
@@ -535,6 +581,7 @@ function EmployeeView() {
   return (
     <>
       <EmployeeHeader
+        handleLanguageChange={handleLanguageChange}
         toggleCreateModal={toggleCreateModal}
         toggleExportExhibitsModal={toggleExportExhibitsModal}
         toggleExportItemsModal={toggleExportItemsModal}
@@ -545,7 +592,10 @@ function EmployeeView() {
       <div style={{ margin: "150px" }}></div>
       <Row>
         <Col>
-          <h1 className="display-5 text-center">Manage Exhibits</h1>
+          <h1 className="display-5 text-center">
+            {" "}
+            {translations["gallery.title"]}
+          </h1>
         </Col>
       </Row>
       <div className="m-5">
@@ -576,7 +626,7 @@ function EmployeeView() {
                         className="float-right"
                         disabled={exhibit.gallery !== loggedInGallery}
                       >
-                        Sell
+                        {translations["generic.sellButton"]}
                       </Button>
                     </Col>
                     <Col sm={6}>
@@ -585,7 +635,7 @@ function EmployeeView() {
                         color="light"
                         onClick={() => handleClickEdit(exhibit)}
                       >
-                        Edit
+                        {translations["generic.editButton"]}
                       </Button>
                     </Col>
                   </Row>
@@ -596,7 +646,9 @@ function EmployeeView() {
         </Row>
 
         <Modal isOpen={createModal} toggle={toggleCreateModal}>
-          <ModalHeader toggle={toggleCreateModal}>Create Exhibit</ModalHeader>
+          <ModalHeader toggle={toggleCreateModal}>
+            {translations["gallery.createTitle"]}
+          </ModalHeader>
           <div>
             {formData && (
               <div className="mx-5 my-4">
@@ -608,9 +660,9 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Name"
+                    placeholder={translations["gallery.name"]}
                   />
-                  <Label for="name">Name</Label>
+                  <Label for="name">{translations["gallery.name"]}</Label>
                 </FormGroup>
                 <FormGroup floating>
                   <Input
@@ -620,9 +672,9 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.artist}
                     onChange={handleInputChange}
-                    placeholder="Artist"
+                    placeholder={translations["gallery.artist"]}
                   />
-                  <Label for="artist">Artist</Label>
+                  <Label for="artist">{translations["gallery.artist"]}</Label>
                 </FormGroup>
                 <FormGroup floating>
                   <Input
@@ -632,9 +684,9 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.year}
                     onChange={handleInputChange}
-                    placeholder="Year"
+                    placeholder={translations["gallery.year"]}
                   />
-                  <Label for="year">Year</Label>
+                  <Label for="year">{translations["gallery.year"]}</Label>
                 </FormGroup>
                 <FormGroup>
                   <Input
@@ -645,8 +697,12 @@ function EmployeeView() {
                     value={formData.type}
                     onChange={handleInputChange}
                   >
-                    <option value="Painting">Painting</option>
-                    <option value="Sculpture">Sculpture</option>
+                    <option value="Painting">
+                      {translations["gallery.optionPainting"]}
+                    </option>
+                    <option value="Sculpture">
+                      {translations["gallery.optionSculpture"]}
+                    </option>
                   </Input>
                 </FormGroup>
                 <FormGroup>
@@ -670,7 +726,7 @@ function EmployeeView() {
                       className="mt-4 mb-3 w-100"
                       onClick={handleCreate}
                     >
-                      Create
+                      {translations["generic.createButton"]}
                     </Button>
                   </Col>
                 </Row>
@@ -680,7 +736,9 @@ function EmployeeView() {
         </Modal>
 
         <Modal isOpen={updateModal} toggle={toggleUpdateModal}>
-          <ModalHeader toggle={toggleUpdateModal}>Edit Exhibit</ModalHeader>
+          <ModalHeader toggle={toggleUpdateModal}>
+            {translations["gallery.updateTitle"]}
+          </ModalHeader>
           <div>
             {selectedExhibit && formData && (
               <div className="mx-5 my-4">
@@ -692,9 +750,9 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.name}
                     onChange={handleInputChange}
-                    placeholder="Name"
+                    placeholder={translations["gallery.name"]}
                   />
-                  <Label for="name">Name</Label>
+                  <Label for="name">{translations["gallery.name"]}</Label>
                 </FormGroup>
                 <FormGroup floating>
                   <Input
@@ -704,9 +762,9 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.artist}
                     onChange={handleInputChange}
-                    placeholder="Artist"
+                    placeholder={translations["gallery.artist"]}
                   />
-                  <Label for="artist">Artist</Label>
+                  <Label for="artist">{translations["gallery.artist"]}</Label>
                 </FormGroup>
                 <FormGroup floating>
                   <Input
@@ -716,9 +774,9 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.year}
                     onChange={handleInputChange}
-                    placeholder="Year"
+                    placeholder={translations["gallery.year"]}
                   />
-                  <Label for="year">Year</Label>
+                  <Label for="year">{translations["gallery.year"]}</Label>
                 </FormGroup>
                 <FormGroup>
                   <Input
@@ -729,8 +787,12 @@ function EmployeeView() {
                     value={formData.type}
                     onChange={handleInputChange}
                   >
-                    <option value="Painting">Painting</option>
-                    <option value="Sculpture">Sculpture</option>
+                    <option value="Painting">
+                      {translations["gallery.optionPainting"]}
+                    </option>
+                    <option value="Sculpture">
+                      {translations["gallery.optionSculpture"]}
+                    </option>
                   </Input>
                 </FormGroup>
                 <FormGroup>
@@ -754,7 +816,7 @@ function EmployeeView() {
                       className="mt-4 mb-3 w-100"
                       onClick={handleUpdate}
                     >
-                      Update
+                      {translations["generic.updateButton"]}
                     </Button>
                   </Col>
                   <Col sm={6}>
@@ -763,7 +825,7 @@ function EmployeeView() {
                       className="mt-4 mb-3 w-100"
                       onClick={handleDelete}
                     >
-                      Delete
+                      {translations["generic.deleteButton"]}
                     </Button>
                   </Col>
                 </Row>
@@ -773,7 +835,9 @@ function EmployeeView() {
         </Modal>
 
         <Modal isOpen={sellModal} toggle={toggleSellModal}>
-          <ModalHeader toggle={toggleSellModal}>Sell Exhibit</ModalHeader>
+          <ModalHeader toggle={toggleSellModal}>
+            {translations["gallery.sellTitle"]}
+          </ModalHeader>
           <div>
             {selectedExhibit && formData && (
               <div className="mx-5 my-4">
@@ -784,10 +848,10 @@ function EmployeeView() {
                     id="name"
                     bsSize="default"
                     value={formData.name}
-                    placeholder="Name"
+                    placeholder={translations["gallery.name"]}
                     disabled
                   />
-                  <Label for="name">Name</Label>
+                  <Label for="name">{translations["gallery.name"]}</Label>
                 </FormGroup>
                 <FormGroup floating>
                   <Input
@@ -796,10 +860,10 @@ function EmployeeView() {
                     id="artist"
                     bsSize="default"
                     value={formData.artist}
-                    placeholder="Artist"
+                    placeholder={translations["gallery.artist"]}
                     disabled
                   />
-                  <Label for="artist">Artist</Label>
+                  <Label for="artist">{translations["gallery.artist"]}</Label>
                 </FormGroup>
                 <FormGroup floating>
                   <Input
@@ -808,10 +872,10 @@ function EmployeeView() {
                     id="year"
                     bsSize="default"
                     value={formData.year}
-                    placeholder="Year"
+                    placeholder={translations["gallery.year"]}
                     disabled
                   />
-                  <Label for="year">Year</Label>
+                  <Label for="year">{translations["gallery.year"]}</Label>
                 </FormGroup>
                 <FormGroup>
                   <Input
@@ -822,8 +886,12 @@ function EmployeeView() {
                     value={formData.type}
                     disabled
                   >
-                    <option value="Painting">Painting</option>
-                    <option value="Sculpture">Sculpture</option>
+                    <option value="Painting">
+                      {translations["gallery.optionPainting"]}
+                    </option>
+                    <option value="Sculpture">
+                      {translations["gallery.optionSculpture"]}
+                    </option>
                   </Input>
                 </FormGroup>
                 <FormGroup>
@@ -848,9 +916,9 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.buyer}
                     onChange={handleInputChange}
-                    placeholder="Buyer"
+                    placeholder={translations["gallery.buyer"]}
                   />
-                  <Label for="buyer">Buyer</Label>
+                  <Label for="buyer">{translations["gallery.buyer"]}</Label>
                 </FormGroup>
                 <FormGroup floating>
                   <Input
@@ -860,13 +928,15 @@ function EmployeeView() {
                     bsSize="default"
                     value={formData.price}
                     onChange={handleInputChange}
-                    placeholder="Price"
+                    placeholder={translations["gallery.price"]}
                   />
-                  <Label for="price">Price</Label>
+                  <Label for="price">{translations["gallery.price"]}</Label>
                 </FormGroup>
                 <FormGroup>
                   <InputGroup>
-                    <InputGroupText>Sale Date</InputGroupText>
+                    <InputGroupText>
+                      {translations["gallery.saleDate"]}
+                    </InputGroupText>
                     <Input
                       type="date"
                       name="saleDate"
@@ -879,7 +949,9 @@ function EmployeeView() {
                 </FormGroup>
                 <FormGroup>
                   <InputGroup>
-                    <InputGroupText>Delivery Date</InputGroupText>
+                    <InputGroupText>
+                      {translations["gallery.deliveryDate"]}
+                    </InputGroupText>
                     <Input
                       type="date"
                       name="deliveryDate"
@@ -895,7 +967,7 @@ function EmployeeView() {
                   className="mt-4 mb-3 w-100"
                   onClick={handleSell}
                 >
-                  Sell
+                  {translations["generic.sellButton"]}
                 </Button>
               </div>
             )}
@@ -904,7 +976,7 @@ function EmployeeView() {
 
         <Modal isOpen={exportExhibitsModal} toggle={toggleExportExhibitsModal}>
           <ModalHeader toggle={toggleExportExhibitsModal}>
-            Export Exhibits Data
+            {translations["gallery.exportFileTitle"]}
           </ModalHeader>
           <ModalBody>
             <Button
@@ -915,7 +987,7 @@ function EmployeeView() {
                 toggleExportExhibitsModal();
               }}
             >
-              Download CSV
+              {translations["gallery.optionCSV"]}
             </Button>
             <Button
               color="light"
@@ -925,7 +997,7 @@ function EmployeeView() {
                 toggleExportExhibitsModal();
               }}
             >
-              Download TXT
+              {translations["gallery.optionTXT"]}
             </Button>
             <Button
               color="light"
@@ -935,14 +1007,14 @@ function EmployeeView() {
                 toggleExportExhibitsModal();
               }}
             >
-              Download JSON
+              {translations["gallery.optionJSON"]}
             </Button>
           </ModalBody>
         </Modal>
 
         <Modal isOpen={exportItemsModal} toggle={toggleExportItemsModal}>
           <ModalHeader toggle={toggleExportItemsModal}>
-            Export Sales Data
+            {translations["gallery.exportSalesTitle"]}
           </ModalHeader>
           <ModalBody>
             <Button
@@ -953,7 +1025,7 @@ function EmployeeView() {
                 toggleExportItemsModal();
               }}
             >
-              Download CSV
+              {translations["gallery.optionCSV"]}
             </Button>
             <Button
               color="light"
@@ -963,7 +1035,7 @@ function EmployeeView() {
                 toggleExportItemsModal();
               }}
             >
-              Download TXT
+              {translations["gallery.optionTXT"]}
             </Button>
             <Button
               color="light"
@@ -973,7 +1045,7 @@ function EmployeeView() {
                 toggleExportItemsModal();
               }}
             >
-              Download JSON
+              {translations["gallery.optionJSON"]}
             </Button>
           </ModalBody>
         </Modal>
@@ -984,7 +1056,7 @@ function EmployeeView() {
           size="lg"
         >
           <ModalHeader toggle={toggleStatisticsModal}>
-            Statistics for Art Gallery
+            {translations["gallery.statisticsTitle1"]}
           </ModalHeader>
           <ModalBody>
             <div>
@@ -993,10 +1065,10 @@ function EmployeeView() {
                   <Card className="mb-3">
                     <CardBody>
                       <CardTitle tag="h5" className="mb-2">
-                        Exhibits per Artist
+                        {translations["gallery.statisticsTitle2"]}
                       </CardTitle>
                       <CardSubtitle className="mb-3">
-                        All galleries
+                        {translations["gallery.statisticsSubtitle"]}
                       </CardSubtitle>
                       {doughnutChartData.labels &&
                         doughnutChartData.labels.length > 0 && (
@@ -1009,10 +1081,10 @@ function EmployeeView() {
                   <Card className="mb-3">
                     <CardBody>
                       <CardTitle tag="h5" className="mb-2">
-                        Types of Exhibits
+                        {translations["gallery.statisticsTitle3"]}
                       </CardTitle>
                       <CardSubtitle className="mb-3">
-                        All galleries
+                        {translations["gallery.statisticsSubtitle"]}
                       </CardSubtitle>
                       {pieChartData.labels &&
                         pieChartData.labels.length > 0 && (
