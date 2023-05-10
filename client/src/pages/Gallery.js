@@ -27,6 +27,10 @@ import {
   Row,
   UncontrolledDropdown 
 } from 'reactstrap';
+import {
+  DoughnutChart,
+  PieChart
+ } from './Charts';
 import { 
   ReactComponent as UserIcon 
 } from '../assets/images/three-dots.svg';
@@ -48,140 +52,145 @@ import {
 } from '../services/ExporterItems';
 
 
-const EmployeeHeader = ({ toggleCreateModal, toggleExportExhibitsModal, toggleExportItemsModal, filterExhibits, clearFilter }) => {
-  const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
-  const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
-
-  const [filterType, setFilterType] = useState('Type');
-  const [filterKeyword, setFilterKeyword] = useState('Painting');
-  const [artists, setArtists] = useState([]);
-
-  const navbar = document.querySelector('.nav');
-
-  const toggleDropdownType = () => setDropdownTypeOpen((prevState) => !prevState);
-  const toggleDropdownKeyword = () => setDropdownKeywordOpen((prevState) => !prevState);
-
-  const handleSearchInput = (e) => {
-    setSearchInput(e.target.value);
-  };
-  const handleSearch = () => {
-    filterExhibits('Name', searchInput);
-  };
-
-  useEffect(() => {
-    const fetchArtists = async () => {
-      try {
-        const response = await api.get('/api/get-artists');
-        setArtists(response.data);
-      } catch (error) {
-        console.error('An error occurred while fetching artists:', error);
+function EmployeeView() { 
+  const EmployeeHeader = ({ toggleCreateModal, toggleExportExhibitsModal, toggleExportItemsModal, toggleStatisticsModal, filterExhibits, clearFilter }) => {
+    const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
+    const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
+  
+    const [filterType, setFilterType] = useState('Type');
+    const [filterKeyword, setFilterKeyword] = useState('Painting');
+    const [artists, setArtists] = useState([]);
+  
+    const toggleDropdownType = () => setDropdownTypeOpen((prevState) => !prevState);
+    const toggleDropdownKeyword = () => setDropdownKeywordOpen((prevState) => !prevState);
+  
+    const handleSearchInput = (e) => {
+      setSearchInput(e.target.value);
+    };
+    const handleSearch = () => {
+      filterExhibits('Name', searchInput);
+    };
+  
+    useEffect(() => {
+      const fetchArtists = async () => {
+        try {
+          const response = await api.get('/api/get-artists');
+          setArtists(response.data);
+        } catch (error) {
+          console.error('An error occurred while fetching artists:', error);
+        }
+      };
+  
+      fetchArtists();
+    }, []);
+  
+    const handleScroll = () => {
+      const navbar = document.querySelector('.nav');
+  
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scroll');
+      } else {
+        navbar.classList.remove('navbar-scroll');
       }
     };
-
-    fetchArtists();
-  }, []);
-
-  const handleScroll = () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add('navbar-scroll');
-    } else {
-      navbar.classList.remove('navbar-scroll');
-    }
-  };
-
-  const handleFilterType = (filterType) => {
-    setFilterType(filterType);
-    if (filterType === 'Artist') {
-      setFilterKeyword(artists.length > 0 ? artists[0] : '');
-    } else {
-      setFilterKeyword('Painting');
-    }
-  };
-
-  const handleFilterKeyword = (filterKeyword) => {
-    setFilterKeyword(filterKeyword);
-  };
-
-  window.addEventListener('scroll', handleScroll);
-
-  return (
-    <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
-      <div className="d-flex w-100 justify-content-center">
-        <div className="d-flex w-75 justify-content-between">
-          <div className="d-flex align-items-center">
-            <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Exhibit</Button>
-            <ButtonGroup className='mx-2'>
-              <Button color="dark" onClick={() => filterExhibits(filterType, filterKeyword)}>Filter</Button>
-              <Button color="dark" onClick={clearFilter}>Clear</Button>
-            </ButtonGroup>
-            <Dropdown className="mx-2" isOpen={dropdownTypeOpen} toggle={toggleDropdownType}>
-              <DropdownToggle caret color="secondary">
-                {filterType}
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleFilterType('Type')}>Type</DropdownItem>
-                <DropdownItem onClick={() => handleFilterType('Artist')}>Artist</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-            <Dropdown className="mx-2" isOpen={dropdownKeywordOpen} toggle={toggleDropdownKeyword}>
-              <DropdownToggle caret color="secondary">
-                {filterKeyword}
-              </DropdownToggle>
-              <DropdownMenu>
-                {filterType === 'Artist' ? (
-                  artists.map((artist) => (
-                    <DropdownItem
-                      key={artist}
-                      onClick={() => handleFilterKeyword(artist)}
-                    >
-                      {artist}
-                    </DropdownItem>
-                  ))
-                ) : (
-                  <>
-                    <DropdownItem onClick={() => handleFilterKeyword('Administrator')}>Administrator</DropdownItem>
-                    <DropdownItem onClick={() => handleFilterKeyword('Employee')}>Employee</DropdownItem>
-                  </>
-                )}
-              </DropdownMenu>
-            </Dropdown>
-            </div>
-            <div className="d-flex align-items-center">       
-              <Button className="mx-2" color="dark" onClick={handleSearch}>Search</Button>    
-              <Input
-                className="ms-2 me-4"
-                type="text"
-                placeholder="Name"
-                value={searchInput}
-                onChange={handleSearchInput}
-                style={{ width: '80%' }}
-              />   
-              <UncontrolledDropdown className="ms-4">
-                <DropdownToggle nav className="link-item">
-                  <UserIcon style={{ width: '20px', height: '20px' }} />
+  
+    const handleFilterType = (filterType) => {
+      setFilterType(filterType);
+      if (filterType === 'Artist') {
+        setFilterKeyword(artists.length > 0 ? artists[0] : '');
+      } else {
+        setFilterKeyword('Painting');
+      }
+    };
+  
+    const handleFilterKeyword = (filterKeyword) => {
+      setFilterKeyword(filterKeyword);
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+  
+    return (
+      <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
+        <div className="d-flex w-100 justify-content-center">
+          <div className="d-flex w-75 justify-content-between">
+            <div className="d-flex align-items-center">
+              <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Exhibit</Button>
+              <ButtonGroup className='mx-2'>
+                <Button color="dark" onClick={() => filterExhibits(filterType, filterKeyword)}>Filter</Button>
+                <Button color="dark" onClick={clearFilter}>Clear</Button>
+              </ButtonGroup>
+              <Dropdown className="mx-2" isOpen={dropdownTypeOpen} toggle={toggleDropdownType}>
+                <DropdownToggle caret color="secondary">
+                  {filterType}
                 </DropdownToggle>
-                <DropdownMenu left>
-                  <DropdownItem onClick={toggleExportExhibitsModal}>Exhibits data</DropdownItem>
-                  <DropdownItem onClick={toggleExportItemsModal}>Sales data</DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => handleFilterType('Type')}>Type</DropdownItem>
+                  <DropdownItem onClick={() => handleFilterType('Artist')}>Artist</DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
-            </div>
+              </Dropdown>
+              <Dropdown className="mx-2" isOpen={dropdownKeywordOpen} toggle={toggleDropdownKeyword}>
+                <DropdownToggle caret color="secondary">
+                  {filterKeyword}
+                </DropdownToggle>
+                <DropdownMenu>
+                  {filterType === 'Artist' ? (
+                    artists.map((artist) => (
+                      <DropdownItem
+                        key={artist}
+                        onClick={() => handleFilterKeyword(artist)}
+                      >
+                        {artist}
+                      </DropdownItem>
+                    ))
+                  ) : (
+                    <>
+                      <DropdownItem onClick={() => handleFilterKeyword('Administrator')}>Administrator</DropdownItem>
+                      <DropdownItem onClick={() => handleFilterKeyword('Employee')}>Employee</DropdownItem>
+                    </>
+                  )}
+                </DropdownMenu>
+              </Dropdown>
+              </div>
+              <div className="d-flex align-items-center">       
+                <Button className="mx-2" color="dark" onClick={handleSearch}>Search</Button>    
+                <Input
+                  className="ms-2 me-4"
+                  type="text"
+                  placeholder="Name"
+                  value={searchInput}
+                  onChange={handleSearchInput}
+                  style={{ width: '80%' }}
+                />   
+                <UncontrolledDropdown className="ms-4">
+                  <DropdownToggle nav className="link-item">
+                    <UserIcon style={{ width: '20px', height: '20px' }} />
+                  </DropdownToggle>
+                  <DropdownMenu left>
+                    <DropdownItem onClick={toggleStatisticsModal}>Statistics</DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem onClick={toggleExportExhibitsModal}>Exhibits data</DropdownItem>
+                    <DropdownItem onClick={toggleExportItemsModal}>Sales data</DropdownItem>
+                    <DropdownItem divider />
+                    <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+              </div>
+          </div>
         </div>
-      </div>
-    </Navbar>
-  );
-};
+      </Navbar>
+    );
+  };
 
-function EmployeeView() { 
   const loggedInGallery = decodeURIComponent(Cookies.get('loggedInGallery'));
 
   const [exhibits, setExhibits] = useState([]);
   const [items, setItems] = useState([]);
   const [galleries, setGalleries] = useState([]);
   const [selectedExhibit, setSelectedExhibit] = useState([]);
+
+  const [doughnutChartData, setDoughnutChartData] = useState({});
+  const [pieChartData, setPieChartData] = useState({});
 
   const navigate = useNavigate();
 
@@ -202,6 +211,7 @@ function EmployeeView() {
   const [sellModal, setSellModal] = useState(false);
   const [exportExhibitsModal, setExportExhibitsModal] = useState(false);
   const [exportItemsModal, setExportItemsModal] = useState(false);
+  const [statisticsModal, setStatisticsModal] = useState(false);
 
   const toggleUpdateModal = () => setUpdateModal(!updateModal);
   const toggleCreateModal = () => {
@@ -218,6 +228,7 @@ function EmployeeView() {
   const toggleSellModal = () => setSellModal(!sellModal);
   const toggleExportExhibitsModal = () => setExportExhibitsModal(!exportExhibitsModal);
   const toggleExportItemsModal = () => setExportItemsModal(!exportItemsModal);
+  const toggleStatisticsModal = () => setStatisticsModal(!statisticsModal);
 
   // Check logged-in user when component mounts
   useEffect(() => {
@@ -237,6 +248,8 @@ function EmployeeView() {
       try {
         const response = await api.get('/api/get-exhibits')
         setExhibits(response.data);
+        setDoughnutChartData(prepareDoughnutChartData(response.data));
+        setPieChartData(preparePieChartData(response.data));
       } catch (error) {
         console.error('An error occurred while fetching exhibits:', error);
       }
@@ -407,13 +420,77 @@ function EmployeeView() {
       console.error("An error occurred while selling the exhibit:", error);
     }
   }; 
+  
+  const prepareDoughnutChartData = (data) => {
+    const artistMap = new Map();
+  
+    data.forEach((exhibit) => {
+      const artist = exhibit.item.artist;
+      artistMap.set(artist, (artistMap.get(artist) || 0) + 1);
+    });
+  
+    const chartLabels = Array.from(artistMap.keys());
+    const doughnutChartData = Array.from(artistMap.values());
+  
+    return {
+      labels: chartLabels,
+      datasets: [
+        {
+          data: doughnutChartData,
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    };
+  };
 
+  const preparePieChartData = (data) => {
+    let sculptures = 0;
+    let paintings = 0;
+  
+    data.forEach((exhibit) => {
+      if (exhibit.item.type === 'Sculpture') {
+        sculptures++;
+      } else if (exhibit.item.type === 'Painting') {
+        paintings++;
+      }
+    });
+  
+    return {
+      labels: ['Sculptures', 'Paintings'],
+      datasets: [
+        {
+          data: [sculptures, paintings],
+          backgroundColor: ['rgba(255, 99, 132, 0.2)', 'rgba(54, 162, 235, 0.2)'],
+          borderColor: ['rgba(255, 99, 132, 1)', 'rgba(54, 162, 235, 1)'],
+          borderWidth: 1,
+        },
+      ],
+    };
+  };
+ 
   return (
     <>
     <EmployeeHeader
         toggleCreateModal={toggleCreateModal}
         toggleExportExhibitsModal={toggleExportExhibitsModal}
         toggleExportItemsModal={toggleExportItemsModal}
+        toggleStatisticsModal={toggleStatisticsModal}
         filterExhibits={filterExhibits}
         clearFilter={clearFilter}
     />
@@ -448,6 +525,7 @@ function EmployeeView() {
               </CardBody>
             </Card>
           </Col>
+
         ))}
       </Row>
 
@@ -818,127 +896,165 @@ function EmployeeView() {
         </ModalBody>
       </Modal>
 
+      <Modal 
+        isOpen={statisticsModal} 
+        toggle={toggleStatisticsModal} 
+        size='lg'
+        >
+        <ModalHeader toggle={toggleStatisticsModal}>Statistics for Art Gallery</ModalHeader>
+        <ModalBody>
+          <div>  
+            <Row sm={12}>
+              <Col sm={6}>
+                <Card className='mb-3'>
+                  <CardBody>
+                    <CardTitle tag='h5' className='mb-2'>Exhibits per Artist</CardTitle>
+                    {
+                      doughnutChartData.labels && doughnutChartData.labels.length > 0 && (
+                        <DoughnutChart data={doughnutChartData} />
+                      )
+                    }
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col sm={6}>
+                <Card className='mb-3'>
+                  <CardBody>
+                    <CardTitle tag='h5' className='mb-2'>Types of Exhibits</CardTitle>
+                    {
+                      pieChartData.labels && pieChartData.labels.length > 0 && (
+                        <PieChart data={pieChartData} />
+                      )
+                    }
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </div>
+        </ModalBody>
+      </Modal>
+
     </div>
     </>
   );
 }
-
-const VisitorHeader = ({ filterExhibits, clearFilter }) => {
-  const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
-  const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState('');
-
-  const [filterType, setFilterType] = useState('Type');
-  const [filterKeyword, setFilterKeyword] = useState('Painting');
-  const [artists, setArtists] = useState([]);
-
-  const navbar = document.querySelector('.nav');
-
-  const toggleDropdownType = () => setDropdownTypeOpen((prevState) => !prevState);
-  const toggleDropdownKeyword = () => setDropdownKeywordOpen((prevState) => !prevState);
-
-  const handleSearchInput = (e) => {
-    setSearchInput(e.target.value);
-  };
-  const handleSearch = () => {
-    filterExhibits('Name', searchInput);
-  };
-
-  useEffect(() => {
-    const fetchArtists = async () => {
-      try {
-        const response = await api.get('/api/get-artists');
-        setArtists(response.data);
-      } catch (error) {
-        console.error('An error occurred while fetching artists:', error);
-      }
-    };
-
-    fetchArtists();
-  }, []);
-
-  const handleScroll = () => {
-    if (window.scrollY > 50) {
-      navbar.classList.add('navbar-scroll');
-    } else {
-      navbar.classList.remove('navbar-scroll');
-    }
-  };
-
-  const handleFilterType = (filterType) => {
-    setFilterType(filterType);
-    if (filterType === 'Artist') {
-      setFilterKeyword(artists.length > 0 ? artists[0] : '');
-    } else {
-      setFilterKeyword('Painting');
-    }
-  };
-
-  const handleFilterKeyword = (filterKeyword) => {
-    setFilterKeyword(filterKeyword);
-  };
-
-  window.addEventListener('scroll', handleScroll);
-
-  return (
-    <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
-      <div className="d-flex w-100 justify-content-center">
-        <div className="d-flex w-75 justify-content-between">
-          <div className="d-flex align-items-center">
-            <ButtonGroup className='mx-2'>
-              <Button color="dark" onClick={() => filterExhibits(filterType, filterKeyword)}>Filter</Button>
-              <Button color="dark" onClick={clearFilter}>Clear</Button>
-            </ButtonGroup>
-            <Dropdown className="mx-2" isOpen={dropdownTypeOpen} toggle={toggleDropdownType}>
-              <DropdownToggle caret color="secondary">
-                {filterType}
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleFilterType('Type')}>Type</DropdownItem>
-                <DropdownItem onClick={() => handleFilterType('Artist')}>Artist</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-            <Dropdown className="mx-2" isOpen={dropdownKeywordOpen} toggle={toggleDropdownKeyword}>
-              <DropdownToggle caret color="secondary">
-                {filterKeyword}
-              </DropdownToggle>
-              <DropdownMenu>
-                {filterType === 'Artist' ? (
-                  artists.map((artist) => (
-                    <DropdownItem
-                      key={artist}
-                      onClick={() => handleFilterKeyword(artist)}
-                    >
-                      {artist}
-                    </DropdownItem>
-                  ))
-                ) : (
-                  <>
-                    <DropdownItem onClick={() => handleFilterKeyword('Administrator')}>Administrator</DropdownItem>
-                    <DropdownItem onClick={() => handleFilterKeyword('Employee')}>Employee</DropdownItem>
-                  </>
-                )}
-              </DropdownMenu>
-            </Dropdown>
-            </div>
-            <div className="d-flex align-items-center">       
-              <Input
-                className="mx-2"
-                type="text"
-                placeholder="Name"
-                value={searchInput}
-                onChange={handleSearchInput}
-                style={{ width: '80%' }}
-              />
-              <Button color="dark" onClick={handleSearch} className="mx-2">Search</Button>
-          </div>
-        </div>
-      </div>
-    </Navbar>
-  );
-};
   
 function VisitorView() {
+  const VisitorHeader = ({ filterExhibits, clearFilter }) => {
+    const [dropdownTypeOpen, setDropdownTypeOpen] = useState(false);
+    const [dropdownKeywordOpen, setDropdownKeywordOpen] = useState(false);
+    const [searchInput, setSearchInput] = useState('');
+  
+    const [filterType, setFilterType] = useState('Type');
+    const [filterKeyword, setFilterKeyword] = useState('Painting');
+    const [artists, setArtists] = useState([]);
+  
+    const toggleDropdownType = () => setDropdownTypeOpen((prevState) => !prevState);
+    const toggleDropdownKeyword = () => setDropdownKeywordOpen((prevState) => !prevState);
+  
+    const handleSearchInput = (e) => {
+      setSearchInput(e.target.value);
+    };
+    const handleSearch = () => {
+      filterExhibits('Name', searchInput);
+    };
+  
+    useEffect(() => {
+      const fetchArtists = async () => {
+        try {
+          const response = await api.get('/api/get-artists');
+          setArtists(response.data);
+        } catch (error) {
+          console.error('An error occurred while fetching artists:', error);
+        }
+      };
+  
+      fetchArtists();
+    }, []);
+  
+    const handleScroll = () => {
+      const navbar = document.querySelector('.nav');
+      
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scroll');
+      } else {
+        navbar.classList.remove('navbar-scroll');
+      }
+    };
+  
+    const handleFilterType = (filterType) => {
+      setFilterType(filterType);
+      if (filterType === 'Artist') {
+        setFilterKeyword(artists.length > 0 ? artists[0] : '');
+      } else {
+        setFilterKeyword('Painting');
+      }
+    };
+  
+    const handleFilterKeyword = (filterKeyword) => {
+      setFilterKeyword(filterKeyword);
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+  
+    return (
+      <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
+        <div className="d-flex w-100 justify-content-center">
+          <div className="d-flex w-75 justify-content-between">
+            <div className="d-flex align-items-center">
+              <ButtonGroup className='mx-2'>
+                <Button color="dark" onClick={() => filterExhibits(filterType, filterKeyword)}>Filter</Button>
+                <Button color="dark" onClick={clearFilter}>Clear</Button>
+              </ButtonGroup>
+              <Dropdown className="mx-2" isOpen={dropdownTypeOpen} toggle={toggleDropdownType}>
+                <DropdownToggle caret color="secondary">
+                  {filterType}
+                </DropdownToggle>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => handleFilterType('Type')}>Type</DropdownItem>
+                  <DropdownItem onClick={() => handleFilterType('Artist')}>Artist</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+              <Dropdown className="mx-2" isOpen={dropdownKeywordOpen} toggle={toggleDropdownKeyword}>
+                <DropdownToggle caret color="secondary">
+                  {filterKeyword}
+                </DropdownToggle>
+                <DropdownMenu>
+                  {filterType === 'Artist' ? (
+                    artists.map((artist) => (
+                      <DropdownItem
+                        key={artist}
+                        onClick={() => handleFilterKeyword(artist)}
+                      >
+                        {artist}
+                      </DropdownItem>
+                    ))
+                  ) : (
+                    <>
+                      <DropdownItem onClick={() => handleFilterKeyword('Administrator')}>Administrator</DropdownItem>
+                      <DropdownItem onClick={() => handleFilterKeyword('Employee')}>Employee</DropdownItem>
+                    </>
+                  )}
+                </DropdownMenu>
+              </Dropdown>
+              </div>
+              <div className="d-flex align-items-center">       
+                <Input
+                  className="mx-2"
+                  type="text"
+                  placeholder="Name"
+                  value={searchInput}
+                  onChange={handleSearchInput}
+                  style={{ width: '80%' }}
+                />
+                <Button color="dark" onClick={handleSearch} className="mx-2">Search</Button>
+            </div>
+          </div>
+        </div>
+      </Navbar>
+    );
+  };
+
   const [exhibits, setExhibits] = useState([]);
 
   useEffect(() => {

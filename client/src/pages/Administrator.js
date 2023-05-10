@@ -31,66 +31,66 @@ import api from '../Api';
 import Cookies from 'js-cookie';
 
 
-const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  
-  const [filterKeyword, setFilterKeyword] = useState('Administrator');
-  
-  const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
-
-  const handleScroll = () => {
-    const navbar = document.querySelector('.nav');
+function AdminView() {
+  const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     
-    if (window.scrollY > 50) {
-      navbar.classList.add('navbar-scroll');
-    } else {
-      navbar.classList.remove('navbar-scroll');
-    }
-  };
-
-  const handleFilterKeyword = (filterKeyword) => {
-    setFilterKeyword(filterKeyword);
-  };
-
-  window.addEventListener('scroll', handleScroll);
-
-  return (
-    <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
-      <div className="d-flex w-100 justify-content-center">
-        <div className="d-flex w-75 justify-content-between">
-          <div className="d-flex align-items-center">
-            <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Account</Button>
-            <ButtonGroup className='mx-2'>
-              <Button color="dark" onClick={() => filterAccounts(filterKeyword)}>Filter</Button>
-              <Button color="dark" onClick={clearFilter}>Clear</Button>
-            </ButtonGroup>
-            <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
-              <DropdownToggle caret color="secondary">
-                {filterKeyword}
-              </DropdownToggle>
-              <DropdownMenu>
-                <DropdownItem onClick={() => handleFilterKeyword('Administrator')}>Administrator</DropdownItem>
-                <DropdownItem onClick={() => handleFilterKeyword('Employee')}>Employee</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          </div>
-          <div className="d-flex align-items-center">
-            <UncontrolledDropdown className="ms-5">
-                <DropdownToggle nav className="link-item">
-                  <UserIcon style={{ width: '20px', height: '20px' }} />
+    const [filterKeyword, setFilterKeyword] = useState('Administrator');
+    
+    const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
+  
+    const handleScroll = () => {
+      const navbar = document.querySelector('.nav');
+      
+      if (window.scrollY > 50) {
+        navbar.classList.add('navbar-scroll');
+      } else {
+        navbar.classList.remove('navbar-scroll');
+      }
+    };
+  
+    const handleFilterKeyword = (filterKeyword) => {
+      setFilterKeyword(filterKeyword);
+    };
+  
+    window.addEventListener('scroll', handleScroll);
+  
+    return (
+      <Navbar className="nav py-3 mb-3" style={{ position: 'fixed', width: '100%', zIndex: 3 }}>
+        <div className="d-flex w-100 justify-content-center">
+          <div className="d-flex w-75 justify-content-between">
+            <div className="d-flex align-items-center">
+              <Button className="mx-2" color="dark" onClick={toggleCreateModal}>Create Account</Button>
+              <ButtonGroup className='mx-2'>
+                <Button color="dark" onClick={() => filterAccounts(filterKeyword)}>Filter</Button>
+                <Button color="dark" onClick={clearFilter}>Clear</Button>
+              </ButtonGroup>
+              <Dropdown className="mx-2" isOpen={dropdownOpen} toggle={toggleDropdown}>
+                <DropdownToggle caret color="secondary">
+                  {filterKeyword}
                 </DropdownToggle>
-                <DropdownMenu left>
-                  <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => handleFilterKeyword('Administrator')}>Administrator</DropdownItem>
+                  <DropdownItem onClick={() => handleFilterKeyword('Employee')}>Employee</DropdownItem>
                 </DropdownMenu>
-              </UncontrolledDropdown>
+              </Dropdown>
+            </div>
+            <div className="d-flex align-items-center">
+              <UncontrolledDropdown className="ms-5">
+                  <DropdownToggle nav className="link-item">
+                    <UserIcon style={{ width: '20px', height: '20px' }} />
+                  </DropdownToggle>
+                  <DropdownMenu left>
+                    <DropdownItem><Link to="/logout">Logout</Link></DropdownItem>
+                  </DropdownMenu>
+                </UncontrolledDropdown>
+            </div>
           </div>
         </div>
-      </div>
-    </Navbar>
-  );
-};
-
-function AdminView() {
+      </Navbar>
+    );
+  };
+  
   const [accounts, setAccounts] = useState([]);
   const [galleries, setGalleries] = useState([]);
   const [selectedAccount, setSelectedAccount] = useState([]);
