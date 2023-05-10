@@ -36,11 +36,11 @@ const AdminHeader = ({ toggleCreateModal, filterAccounts, clearFilter }) => {
   
   const [filterKeyword, setFilterKeyword] = useState('Administrator');
   
-  const navbar = document.querySelector('.nav');
-
   const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
   const handleScroll = () => {
+    const navbar = document.querySelector('.nav');
+    
     if (window.scrollY > 50) {
       navbar.classList.add('navbar-scroll');
     } else {
