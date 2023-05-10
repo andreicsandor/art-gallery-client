@@ -909,6 +909,7 @@ function EmployeeView() {
                 <Card className='mb-3'>
                   <CardBody>
                     <CardTitle tag='h5' className='mb-2'>Exhibits per Artist</CardTitle>
+                    <CardSubtitle className='mb-3'>All galleries</CardSubtitle>
                     {
                       doughnutChartData.labels && doughnutChartData.labels.length > 0 && (
                         <DoughnutChart data={doughnutChartData} />
@@ -921,6 +922,7 @@ function EmployeeView() {
                 <Card className='mb-3'>
                   <CardBody>
                     <CardTitle tag='h5' className='mb-2'>Types of Exhibits</CardTitle>
+                    <CardSubtitle className='mb-3'>All galleries</CardSubtitle>
                     {
                       pieChartData.labels && pieChartData.labels.length > 0 && (
                         <PieChart data={pieChartData} />
