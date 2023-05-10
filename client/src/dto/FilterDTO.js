@@ -1,9 +1,8 @@
 class FilterDTO {
-    constructor(filterType, filterKeyword) {
-      this.filterType = filterType;
-      this.filterKeyword = filterKeyword;
-    }
+  constructor(filterType, filterKeyword) {
+    this.filterType = filterType;
+    this.filterKeyword = filterKeyword;
   }
-  
-  export default FilterDTO;
-  
+}
+
+export default FilterDTO;
