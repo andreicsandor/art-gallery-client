@@ -561,8 +561,8 @@ function EmployeeView() {
 
     return {
       labels: [
-        translations["gallery.optionSculptures"],
-        translations["gallery.optionPaintings"],
+        "Sculptures",
+        "Paintings",
       ],
       datasets: [
         {
