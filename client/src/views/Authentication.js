@@ -11,8 +11,11 @@ import {
 } from "reactstrap";
 import api from "../Api";
 import Cookies from "js-cookie";
+import { useLanguage } from "../services/LanguageProvider";
 
 const LoginView = () => {
+  const { translations, changeLanguage } = useLanguage();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -83,7 +86,7 @@ const LoginView = () => {
               className="display-4 text-center"
               style={{ marginBottom: "5rem" }}
             >
-              Welcome to Art Gallery
+              {translations['login.subtitle']}
             </h1>
           </Col>
         </Row>
