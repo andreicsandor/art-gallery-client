@@ -518,7 +518,7 @@ function AdminView() {
                  </Button>
                </Col>
                <Col sm={6}>
-                 <Button color='dark' className='mt-4 mb-3 w-100' onClick={handleDelete}>
+                 <Button color='secondary' className='mt-4 mb-3 w-100' onClick={handleDelete}>
                    Delete
                  </Button>
                </Col>
