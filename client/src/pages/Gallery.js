@@ -44,12 +44,12 @@ import {
   downloadExhibitsTXT, 
   downloadExhibitsCSV, 
   downloadExhibitsJSON
-} from '../services/ExporterExhibits';
+} from '../services/ExhibitsExporter';
 import { 
   downloadItemsTXT, 
   downloadItemsCSV, 
   downloadItemsJSON
-} from '../services/ExporterItems';
+} from '../services/ItemsExporter';
 
 
 function EmployeeView() { 
