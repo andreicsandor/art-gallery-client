@@ -496,7 +496,6 @@ function EmployeeView() {
         formData.type,
         formData.year,
         formData.gallery,
-        formData.image,
         formData.buyer,
         formData.price,
         formData.saleDate,
