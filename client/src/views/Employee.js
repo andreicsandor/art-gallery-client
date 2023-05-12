@@ -6,6 +6,7 @@ import {
   ButtonGroup,
   Card,
   CardBody,
+  CardImg,
   CardSubtitle,
   CardTitle,
   Col,
@@ -274,6 +275,7 @@ function EmployeeView() {
     type: "Painting",
     year: "",
     gallery: "The Museum of Modern Art",
+    image: "",
     buyer: "",
     price: "",
     saleDate: "",
@@ -295,6 +297,7 @@ function EmployeeView() {
       type: "Painting",
       year: "",
       gallery: "The Museum of Modern Art",
+      image: "",
     });
 
     setCreateModal(!createModal);
@@ -392,6 +395,7 @@ function EmployeeView() {
       type: exhibit.item.type,
       year: exhibit.item.year,
       gallery: exhibit.gallery,
+      image: exhibit.item.image,
     });
   };
 
@@ -425,7 +429,8 @@ function EmployeeView() {
         formData.artist,
         formData.type,
         formData.year,
-        formData.gallery
+        formData.gallery,
+        formData.image
       );
 
       const response = await api.post("/api/create-exhibit", exhibitDTO);
@@ -446,7 +451,8 @@ function EmployeeView() {
         formData.artist,
         formData.type,
         formData.year,
-        formData.gallery
+        formData.gallery,
+        formData.image
       );
 
       const response = await api.put(
@@ -486,6 +492,7 @@ function EmployeeView() {
         formData.type,
         formData.year,
         formData.gallery,
+        formData.image,
         formData.buyer,
         formData.price,
         formData.saleDate,
@@ -560,10 +567,7 @@ function EmployeeView() {
     });
 
     return {
-      labels: [
-        "Sculptures",
-        "Paintings",
-      ],
+      labels: ["Sculptures", "Paintings"],
       datasets: [
         {
           data: [sculptures, paintings],
@@ -603,6 +607,14 @@ function EmployeeView() {
           {exhibits.map((exhibit) => (
             <Col sm={3} key={exhibit.item.id}>
               <Card className="card-shadow-custom mb-3">
+                {exhibit.item.image && (
+                  <CardImg
+                    top
+                    width="100%"
+                    src={exhibit.item.image}
+                    alt="Exhibit"
+                  />
+                )}
                 <CardBody>
                   <CardTitle tag="h5" className="mb-2">
                     {exhibit.item.name}
@@ -687,6 +699,18 @@ function EmployeeView() {
                     placeholder={translations["gallery.year"]}
                   />
                   <Label for="year">{translations["gallery.year"]}</Label>
+                </FormGroup>
+                <FormGroup floating>
+                  <Input
+                    type="text"
+                    name="image"
+                    id="image"
+                    bsSize="default"
+                    value={formData.image}
+                    onChange={handleInputChange}
+                    placeholder={translations["gallery.image"]}
+                  />
+                  <Label for="year">{translations["gallery.image"]}</Label>
                 </FormGroup>
                 <FormGroup>
                   <Input
@@ -777,6 +801,18 @@ function EmployeeView() {
                     placeholder={translations["gallery.year"]}
                   />
                   <Label for="year">{translations["gallery.year"]}</Label>
+                </FormGroup>
+                <FormGroup floating>
+                  <Input
+                    type="text"
+                    name="image"
+                    id="image"
+                    bsSize="default"
+                    value={formData.image}
+                    onChange={handleInputChange}
+                    placeholder={translations["gallery.image"]}
+                  />
+                  <Label for="year">{translations["gallery.image"]}</Label>
                 </FormGroup>
                 <FormGroup>
                   <Input

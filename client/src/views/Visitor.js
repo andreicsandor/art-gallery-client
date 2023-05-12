@@ -5,6 +5,7 @@ import {
   ButtonGroup,
   Card,
   CardBody,
+  CardImg,
   CardSubtitle,
   CardTitle,
   Col,
@@ -282,6 +283,14 @@ function VisitorView() {
           {exhibits.map((exhibit) => (
             <Col sm={3} key={exhibit.id}>
               <Card className="card-shadow-custom mb-3">
+                {exhibit.item.image && (
+                  <CardImg
+                    top
+                    width="100%"
+                    src={exhibit.item.image}
+                    alt="Exhibit"
+                  />
+                )}
                 <CardBody>
                   <CardTitle tag="h5" className="mb-2">
                     {exhibit.item.name}
