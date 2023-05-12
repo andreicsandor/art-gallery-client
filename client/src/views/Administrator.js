@@ -42,12 +42,16 @@ function AdminView() {
     const toggleDropdown = () => setDropdownOpen((prevState) => !prevState);
 
     const handleScroll = () => {
-      const navbar = document.querySelector(".nav");
-
-      if (window.scrollY > 50) {
-        navbar.classList.add("navbar-scroll");
-      } else {
-        navbar.classList.remove("navbar-scroll");
+      try {
+        const navbar = document.querySelector(".nav");
+    
+        if (navbar && window.scrollY > 50) {
+          navbar.classList.add("navbar-scroll");
+        } else if (navbar) {
+          navbar.classList.remove("navbar-scroll");
+        }
+      } catch (error) {
+        console.error("An error occurred while handling scroll:", error);
       }
     };
 

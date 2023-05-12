@@ -8,6 +8,7 @@ import {
   Form,
   FormGroup,
   Input,
+  Navbar,
   Row,
 } from "reactstrap";
 import api from "../Api";
@@ -15,6 +16,17 @@ import Cookies from "js-cookie";
 import { useLanguage } from "../services/LanguageProvider";
 
 const LoginView = () => {
+  const LoginHeader = () => {
+   
+    return (
+      <Navbar
+        className="nav py-3 mb-3"
+        style={{ position: "fixed", width: "100%", zIndex: 3 }}
+      >
+      </Navbar>
+    );
+  };
+
   const { translations, changeLanguage } = useLanguage();
 
   const [username, setUsername] = useState("");
